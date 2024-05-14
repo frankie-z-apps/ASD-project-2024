@@ -48,7 +48,7 @@ class MinHeap(Heap):
         self.heapify(0)
 
 
-    def buildheap(self, array):
+    def build_heap(self, array):
         self.heap = array.copy()
         for i in range(len(self.heap) // 2, -1, -1):
             self.heapify(i)
@@ -69,14 +69,14 @@ class MinHeap(Heap):
     
     def insert(self, value):
         self.heap.append(value)
-        self.moveup(len(self.heap)-1)
+        self.move_up(len(self.heap)-1)
 
 
-    def moveup(self, i):
+    def move_up(self, i):
         p = self.parent(i)
         if p != None and self.heap[i] < self.heap[p]:
             self.heap[i], self.heap[p] = self.heap[p], self.heap[i]
-            self.moveup(p)
+            self.move_up(p)
 
 
 class MaxHeap(Heap):
@@ -86,7 +86,7 @@ class MaxHeap(Heap):
         self.heapify(0)
 
 
-    def buildheap(self, array):
+    def build_heap(self, array):
         self.heap = array.copy()
         for i in range(len(self.heap) // 2, -1, -1):
             self.heapify(i)
@@ -107,14 +107,14 @@ class MaxHeap(Heap):
     
     def insert(self, value):
         self.heap.append(value)
-        self.moveup(len(self.heap)-1)
+        self.move_up(len(self.heap)-1)
 
     
-    def moveup(self, i):
+    def move_up(self, i):
         p = self.parent(i)
         if p != None and self.heap[i] > self.heap[p]:
             self.heap[i], self.heap[p] = self.heap[p], self.heap[i]
-            self.moveup(p)
+            self.move_up(p)
 
 
 # min-Heap che gestisce elementi formati da coppie (valore, indice)
@@ -132,11 +132,11 @@ class AuxMinHeap(MinHeap):
             self.heapify(min)
     
 
-    def moveup(self, i):
+    def move_up(self, i):
         p = self.parent(i)
         if p != None and self.heap[i][0] < self.heap[p][0]:
             self.heap[i], self.heap[p] = self.heap[p], self.heap[i]
-            self.moveup(p)
+            self.move_up(p)
 
 
 # max-Heap che gestisce elementi formati da coppie (valore, indice)
@@ -154,11 +154,11 @@ class AuxMaxHeap(MaxHeap):
             self.heapify(max)
     
 
-    def moveup(self, i):
+    def move_up(self, i):
         p = self.parent(i)
         if p != None and self.heap[i][0] > self.heap[p][0]:
             self.heap[i], self.heap[p] = self.heap[p], self.heap[i]
-            self.moveup(p)
+            self.move_up(p)
 
 
 def heap_select(arr, k): # complessità O(n + k log k)
@@ -174,7 +174,7 @@ def heap_select(arr, k): # complessità O(n + k log k)
         main_heap = MinHeap()
         aux_heap = AuxMinHeap()
     
-    main_heap.buildheap(arr)
+    main_heap.build_heap(arr)
     aux_heap.insert((main_heap.heap[0], 0))
 
     for i in range(0, pos):
@@ -191,6 +191,6 @@ def heap_select(arr, k): # complessità O(n + k log k)
     return val
 
 
-inputArr = input_array()
+arr = input_array()
 k = int(input())
-print(heap_select(inputArr, k))
+print(heap_select(arr, k))
