@@ -1,4 +1,27 @@
 import time
+import random
+
+'''
+Ogni test su una lunghezza n data deve generare in modo pseudo-casuale 
+un array di n interi, in un intervallo a scelta (es. interi compresi fra 0 e 1000000) 
+e un parametro k∈{1,...,n}. Si noti che la complessità di alcuni algoritmi può dipendere 
+in modo significativo dalla scelta del range di interi e dal parametro k
+ed è quindi possibile immaginare test diversificati in funzione di queste variabili 
+allo scopo di evidenziare tali dipendenze.
+'''
+
+def init_array(n):
+    random.seed()
+    array = []
+    for i in range(n):
+        array.append(random.randint(-1000, 1000))
+    return array
+
+
+def init_index(n):
+    random.seed()
+    return random.randint(1, n-1)
+
 
 '''
 Il primo passo consiste nello stimare la risoluzione del clock di sistema,
@@ -71,3 +94,8 @@ def measure(n, min_time, algorithm):
              break
         
     return (end_time - start_time) / count
+
+
+arr = init_array(100)
+print(arr)
+print(init_index(100))
