@@ -109,7 +109,7 @@ def heap_select(arr, k): # complessità O(n + k log k)
     aux_heap = AuxMinHeap()
     aux_heap.insert((main_heap.heap[0], 0))
 
-    for i in range(0, k-1): # k volte
+    for i in range(0, k-1):
         (val, ind) = aux_heap.getmin()
         aux_heap.extract()
 
