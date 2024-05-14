@@ -164,16 +164,20 @@ class AuxMaxHeap(MaxHeap):
 def heap_select(arr, k): # complessità O(n + k log k)
     # a seconda del valore di k, lavoro con max-Heap o min-Heap
     if k > len(arr)//2:
+        # a seconda che utilizzi max-Heap o min-Heap cambia il numero di iterazioni per trovare 
+        # il k-1 esimo elemento
+        pos = len(arr) - k
         main_heap = MaxHeap()
         aux_heap = AuxMaxHeap()
     else:
+        pos = k-1
         main_heap = MinHeap()
         aux_heap = AuxMinHeap()
     
     main_heap.buildheap(arr)
     aux_heap.insert((main_heap.heap[0], 0))
 
-    for i in range(0, k-1):
+    for i in range(0, pos):
         (val, ind) = aux_heap.peek()
         aux_heap.extract()
 
