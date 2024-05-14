@@ -36,12 +36,12 @@ def median_of_medians(arr, low, high, k):
         # 1 - divisione dell'array in blocchi di 5 elementi
         for i in range(low, high, 5):
             # 2 - ordinamento e calcolo della mediana di ciascun blocco
-            if i + 5 > high:
-                insertion_sort(arr, i, high)
-                arr[z], arr[ ceil((high + i)/2)-1 ] = arr[ ceil((high + i)/2)-1 ], arr[z]
-            else:
+            if i + 5 <= high:
                 insertion_sort(arr, i, i+5)
                 arr[z], arr[i+2] = arr[i+2], arr[z]
+            else:
+                insertion_sort(arr, i, high)
+                arr[z], arr[ ceil((high + i)/2)-1 ] = arr[ ceil((high + i)/2)-1 ], arr[z]                
 
             z += 1
             medians_counter += 1
