@@ -24,10 +24,6 @@ class Heap:
         if i == 0:
             return None
         return (i+1) // 2 - 1
-
-
-    def length(self):
-        return len(self.heap)
     
 
     def peek(self):
