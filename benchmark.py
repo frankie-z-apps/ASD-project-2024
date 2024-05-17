@@ -1,5 +1,8 @@
 import time
 import random
+import math 
+import matplotlib.pyplot as plt
+import algorithms
 
 '''
 Ogni test su una lunghezza n data deve generare in modo pseudo-casuale 
@@ -10,12 +13,12 @@ ed è quindi possibile immaginare test diversificati in funzione di queste varia
 allo scopo di evidenziare tali dipendenze.
 '''
 
-def init_array(n):
+def init_array(n, max_val):
     random.seed()
-    array = []
+    arr = [0] * n
     for i in range(n):
-        array.append(random.randint(-1000, 1000))
-    return array
+        arr[i] = random.randint(0, max_val)
+    return arr
 
 
 def init_index(n):
@@ -40,11 +43,9 @@ def resolution():
 # so we calculate a mean value
 def calculate_mean_resolution():
     attempts = 1000
-    tot_sum = 0
-    
+    tot_sum = 0    
     for i in range(attempts):
         tot_sum += resolution()
-    
     return tot_sum / attempts
 
 
@@ -60,7 +61,7 @@ Tmin = r*(1/err + 1)
 
 err_min = 0.001
 
-min_time = r * (1/err_min + 1)
+min_time = r * ((1/err_min) + 1)
 
 
 '''
@@ -77,25 +78,56 @@ il rapporto fra il tempo totale misurato e il numero di iterazioni dell'algoritm
 (questa divisione non influisce sull'errore relativo commesso).
 '''
 
-def measure(n, min_time, algorithm):
+def measure(n, max_val, function, mean_resolution):
+    min_err = 0.001
+    min_time = mean_resolution * ((1/min_err) + 1)
     # n is the desired size of the array
     # min_time is the minumum measurable time to guarantee bounded relative error
     count = 0
     start_time = time.perf_counter()
-    
     while True:
-        arr = init_array(n)
+        arr = init_array(n, max_val)
         k = init_index(n)
-        algorithm(arr, k)
+        # this way all function must have same signature (required args)
+        function(arr, 0, len(arr), k)
         count = count + 1
         end_time = time.perf_counter()
-
         if end_time - start_time >= min_time:
              break
-        
+
     return (end_time - start_time) / count
 
 
-arr = init_array(100)
-print(arr)
-print(init_index(100))
+def main():
+    resolution = calculate_mean_resolution()
+    n_min = 100
+    n_max = 100000
+    times = 100
+    # if we want n = 100 for i = 0 then A = 100
+    A = n_min
+    # if A = 100, then 100*(B**i) = 100000 for i = 99,
+    # solving for B, we extract the 99th root of 1000 
+    # for finding B's value
+    B = (n_max / n_min) ** (1/99)
+    points = [(None, None, None, None)] * times
+
+    for i in range(times):
+        print(f"\r{i} -> ", end='')
+        n = int(A * (B ** i))
+        print(f"valore di n: {n}")
+        
+        points[i] = (n, 
+            measure(n, 100, algorithms.quick_select, resolution),
+            measure(n, 100, algorithms.heap_select, resolution),
+            measure(n, 100, algorithms.median_of_medians, resolution),
+        )
+
+    xs, ys1, ys2, ys3 = zip(*points)
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.scatter(xs, ys1, c='green') # quick_select
+    plt.scatter(xs, ys2, c='blue') # heap_select
+    plt.scatter(xs, ys3, c='red') # median_of_medians
+    plt.show()
+
+main()
