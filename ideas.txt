@@ -1,0 +1,6 @@
+Ideas to speeding up the execution of algorithms:
+
+QUICK_SELECT:
+
+- run the validity test on parameters only once and not for every recursive call
+- try with iterative version instead of recursive
