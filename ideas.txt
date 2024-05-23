@@ -1,6 +1,37 @@
 Ideas to speeding up the execution of algorithms:
 
+
+E-LEARNING TESTS:
+
+- create a module just for testing on e-learning interface
+
+
 QUICK_SELECT:
 
-- run the validity test on parameters only once and not for every recursive call
-- try with iterative version instead of recursive
+-   run the validity test on parameters only once and not for every recursive call
+-   try with iterative version instead of recursive
+-   differentiate between randomized partition and
+    fixed-pivot partition
+
+
+HEAP_SELECT:
+
+-
+
+
+MEDIAN_OF_MEDIANS_SELECT:
+
+-
+
+
+BENCHMARK:
+
+-   import directly a single algorithm-module instead of algorithms.py file
+    so that is easier to modify and test a single module at a time
+
+-   run specific tests on different versions of the SAME algorithm
+    to get an idea whether the modifications work or not,
+    and to identify the one that performs better
+
+-   verify that changing the starting position of the timer in 
+    measure() function does not mess up things
