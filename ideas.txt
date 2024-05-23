@@ -1,4 +1,4 @@
-Ideas to speeding up the execution of algorithms:
+Ideas to optimizing the execution time of algorithms:
 
 
 E-LEARNING TESTS:
@@ -35,3 +35,5 @@ BENCHMARK:
 
 -   verify that changing the starting position of the timer in 
     measure() function does not mess up things
+
+-   add a legenda explaining the colors associated with the algorithms
