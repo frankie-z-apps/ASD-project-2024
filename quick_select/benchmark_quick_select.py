@@ -113,9 +113,9 @@ def measure(n, max_val, function, mean_resolution, tot_indexes):
 def main():
     resolution = calculate_mean_resolution()
     n_min = 100
-    n_max = 10000
+    n_max = 100000
     times = 100
-    tot_k_indices = 3
+    tot_k_indices = 1
     # if we want n = 100 for i = 0 then A = 100
     A = n_min
     # if A = 100, then 100*(B**i) = 100000 for i = 99,
@@ -131,18 +131,18 @@ def main():
         
         points[i] = (n, 
             measure(n, 100, iter.quick_select_iter_fixed, resolution, tot_k_indices),
-            measure(n, 100, iter_rand.quick_select_iter_rand, resolution, tot_k_indices),
+            #measure(n, 100, iter_rand.quick_select_iter_rand, resolution, tot_k_indices),
             measure(n, 100, rec.quick_select_rec, resolution, tot_k_indices),
             measure(n, 100, rec_rand.quick_select_rec_rand, resolution, tot_k_indices)
         )
 
-    xs, ys1, ys2, ys3, ys4 = zip(*points)
+    xs, ys1, ys3, ys4 = zip(*points)
     plt.xscale('log')
     plt.yscale('log')
-    plt.scatter(xs, ys1, c='green') # quick_select
-    plt.scatter(xs, ys2, c='blue') # heap_select
-    plt.scatter(xs, ys3, c='red') # median_of_medians
-    plt.scatter(xs, ys4, c='orange')
+    plt.scatter(xs, ys1, c='green')     # iter fixed
+    #plt.scatter(xs, ys2, c='blue')      # iter random
+    plt.scatter(xs, ys3, c='red')       # recursion fixed
+    plt.scatter(xs, ys4, c='orange')    # recursion random
     plt.show()
 
 main()
