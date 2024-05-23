@@ -1,4 +1,4 @@
-import random
+import partition
 
 # QUICK SELECT RECURSIVE VERSION (FIXED PIVOT)
 
@@ -16,7 +16,7 @@ def are_parameters_valid(low, high, k):
 
 
 def quick_select_tested(a, low, high, k):                     
-    r = partition(a, low, high)
+    r = partition.partition(a, low, high)
     # base case -> chosen pivot is the searched value, return element in this position
     if r == k-1: 
         return a[r]
@@ -26,7 +26,7 @@ def quick_select_tested(a, low, high, k):
     else: 
         return quick_select_tested(a, r+1, high, k)
 
-
+'''
 def partition(a, low, high):
     p = a[high-1]
     i = low
@@ -36,12 +36,7 @@ def partition(a, low, high):
             i += 1
     a[i], a[high-1] = a[high-1], a[i]
     return i 
-
-
-def rand_partition(a, low, high):
-    i = random.randint(low, high-1)
-    a[high-1], a[i] = a[i], a[high-1]
-    return partition(a, low, high)
+'''
 
 
 #'''Tests:

@@ -1,4 +1,4 @@
-import random
+import rand_partition
 
 # QUICK SELECT ITERATIVE VERSION (RANDOMIZED PIVOT)
 
@@ -17,15 +17,15 @@ def are_parameters_valid(low, high, k):
 
 # we're assuming that the parameters are valid
 def iter_quick_select_tested_r(a, low, high, k):
-    r = rand_partition(a, low, high)
+    r = rand_partition.rand_partition(a, low, high)
     while r != k-1:
         if r > k-1:
-            r = rand_partition(a, low, r)
+            r = rand_partition.rand_partition(a, low, r)
         else:
-            r = rand_partition(a, r+1, high)
+            r = rand_partition.rand_partition(a, r+1, high)
     return a[r]
 
-
+'''
 def partition(a, low, high):
     p = a[high-1]
     i = low
@@ -35,13 +35,13 @@ def partition(a, low, high):
             i += 1
     a[i], a[high-1] = a[high-1], a[i]
     return i 
-
-
+'''
+'''
 def rand_partition(a, low, high):
     i = random.randint(low, high-1)
     a[high-1], a[i] = a[i], a[high-1]
     return partition(a, low, high)
-
+'''
 
 def input_array():
     return [int(x) for x in input().split(" ") if x]
