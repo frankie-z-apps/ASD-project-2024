@@ -37,3 +37,6 @@ BENCHMARK:
     measure() function does not mess up things
 
 -   add a legenda explaining the colors associated with the algorithms
+
+-   study the effect of varying the range of number values for the elements of 
+    the arrays
