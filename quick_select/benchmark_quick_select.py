@@ -113,9 +113,9 @@ def measure(n, max_val, function, mean_resolution, tot_indexes):
 def main():
     resolution = calculate_mean_resolution()
     n_min = 100
-    n_max = 100000
+    n_max = 10000
     times = 100
-    tot_k_indices = 1
+    tot_k_indices = 5
     # if we want n = 100 for i = 0 then A = 100
     A = n_min
     # if A = 100, then 100*(B**i) = 100000 for i = 99,
@@ -130,19 +130,20 @@ def main():
         print(f"valore di n: {n}")
         
         points[i] = (n, 
-            measure(n, 100, iter.quick_select_iter_fixed, resolution, tot_k_indices),
-            #measure(n, 100, iter_rand.quick_select_iter_rand, resolution, tot_k_indices),
-            measure(n, 100, rec.quick_select_rec, resolution, tot_k_indices),
-            measure(n, 100, rec_rand.quick_select_rec_rand, resolution, tot_k_indices)
+            measure(n, 1000000, iter.quick_select_iter_fixed, resolution, tot_k_indices),
+            measure(n, 1000000, iter_rand.quick_select_iter_rand, resolution, tot_k_indices),
+            measure(n, 1000000, rec.quick_select_rec, resolution, tot_k_indices),
+            measure(n, 1000000, rec_rand.quick_select_rec_rand, resolution, tot_k_indices)
         )
 
-    xs, ys1, ys3, ys4 = zip(*points)
+    xs, ys1, ys2, ys3, ys4 = zip(*points)
     plt.xscale('log')
     plt.yscale('log')
-    plt.scatter(xs, ys1, c='green')     # iter fixed
-    #plt.scatter(xs, ys2, c='blue')      # iter random
-    plt.scatter(xs, ys3, c='red')       # recursion fixed
-    plt.scatter(xs, ys4, c='orange')    # recursion random
+    plt.scatter(xs, ys1, c='green', label='Iterative Fixed Pivot')     # iter fixed
+    plt.scatter(xs, ys2, c='blue', label='Iterative Random Pivot')      # iter random
+    plt.scatter(xs, ys3, c='red', label="Recursive Fixed Pivot")       # recursion fixed
+    plt.scatter(xs, ys4, c='orange', label="Recursive Random Pivot")    # recursion random
+    plt.legend(title="Quick Select")
     plt.show()
 
 main()
