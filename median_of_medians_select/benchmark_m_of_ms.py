@@ -3,6 +3,7 @@ import random
 import matplotlib.pyplot as plt
 import median_of_medians_team_version as mtv
 import median_of_medians_1 as m_one
+import med_of_meds_03 as m_iter
 
 
 def init_array(n, max_rand_val):
@@ -81,18 +82,18 @@ def main():
         print(f"valore di n: {n}")
         
         points[i] = (n, 
-            measure(n, 1000000, mtv.median_of_medians, resolution, tot_k_indices),
             measure(n, 1000000, m_one.median_of_medians, resolution, tot_k_indices),
-            #measure(n, 1000000, rec.quick_select_rec, resolution, tot_k_indices),
+            measure(n, 1000000, mtv.median_of_medians, resolution, tot_k_indices),
+            measure(n, 1000000, m_iter.median_of_medians_select, resolution, tot_k_indices),
             #measure(n, 1000000, rec_rand.quick_select_rec_rand, resolution, tot_k_indices)
         )
 
-    xs, ys1, ys2 = zip(*points)
+    xs, ys1, ys2, ys3 = zip(*points)
     plt.xscale('log')
     plt.yscale('log')
-    plt.scatter(xs, ys1, c='green', label='Team Version')     # iter fixed
-    plt.scatter(xs, ys2, c='blue', label='First Version')      # iter random
-    #plt.scatter(xs, ys3, c='red', label="Recursive Fixed Pivot")       # recursion fixed
+    plt.scatter(xs, ys1, c='blue', label='First Version')  
+    plt.scatter(xs, ys2, c='green', label='Second Version')
+    plt.scatter(xs, ys3, c='orange', label='Third Version')   
     #plt.scatter(xs, ys4, c='orange', label="Recursive Random Pivot")    # recursion random
     plt.legend(title="Median of Medians Select")
     plt.show()
