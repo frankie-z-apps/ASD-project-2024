@@ -1,4 +1,4 @@
-import rand_partition
+import quick_select.rand_partition as rand_partition
 
 # QUICK SELECT RECURSIVE VERSION (RANDOMIZED PIVOT)
 
