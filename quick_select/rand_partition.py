@@ -1,4 +1,4 @@
-import partition
+import quick_select.partition as partition
 import random
 
 
