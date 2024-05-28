@@ -69,12 +69,16 @@ def measure(n, max_rand_val, function, mean_resolution, tot_indexes):
 def main():
     resolution = calculate_mean_resolution()
     n_min = 100
-    n_max = 100000
+    n_max = 500
     times = 100
-    tot_k_indices = 5
+    tot_k_indices = 10
+    max_random_value = 1000000
+
     A = n_min
     B = (n_max / n_min) ** (1/99)
     points = [(None, None, None)] * times
+
+    main_duration_start = time.perf_counter()
 
     for i in range(times):
         print(f"\r{i} -> ", end='')
@@ -82,11 +86,13 @@ def main():
         print(f"valore di n: {n}")
         
         points[i] = (n, 
-            measure(n, 1000000, quick.quick_select_rec_rand, resolution, tot_k_indices),
-            measure(n, 1000000, heap.heap_select, resolution, tot_k_indices),
-            measure(n, 1000000, median.median_of_medians_select, resolution, tot_k_indices),
+            measure(n, max_random_value, quick.quick_select_rec_rand, resolution, tot_k_indices),
+            measure(n, max_random_value, heap.heap_select, resolution, tot_k_indices),
+            measure(n, max_random_value, median.median_of_medians_select, resolution, tot_k_indices),
             #measure(n, 1000000, rec_rand.quick_select_rec_rand, resolution, tot_k_indices)
         )
+
+    main_duration_end = time.perf_counter()
 
     xs, ys1, ys2, ys3 = zip(*points)
     plt.xscale('log')
@@ -95,7 +101,11 @@ def main():
     plt.scatter(xs, ys2, c='green', label='Heap Select')
     plt.scatter(xs, ys3, c='orange', label='Median of Medians Select')   
     #plt.scatter(xs, ys4, c='orange', label="Recursive Random Pivot")    # recursion random
-    plt.legend(title="Median of Medians Select")
+    plt.legend(title="Algorithms comparison")
+    
+    #plt.text(0.5, -0.1, f'Number of k-tries for array: {tot_k_indices}\nMax random value for array element: {max_random_value}\nTotal execution time (seconds): {main_duration_end - main_duration_start}', ha='center', transform=plt.gca().transAxes)
+    plt.annotate(f'Number of k-tries for array: {tot_k_indices}\nMax random value for array element: {max_random_value}\nTotal execution time (seconds): {main_duration_end - main_duration_start}',xy=(0.0, -0.12), xycoords='axes fraction', ha='left', fontsize=7)
+    
     plt.show()
 
 main()
