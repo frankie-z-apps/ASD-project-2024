@@ -113,9 +113,9 @@ def measure(n, max_val, function, mean_resolution, tot_indexes):
 def main():
     resolution = calculate_mean_resolution()
     n_min = 100
-    n_max = 10000
+    n_max = 100000
     times = 100
-    tot_k_indices = 5
+    tot_k_indices = 10
     # if we want n = 100 for i = 0 then A = 100
     A = n_min
     # if A = 100, then 100*(B**i) = 100000 for i = 99,
@@ -140,9 +140,9 @@ def main():
     plt.xscale('log')
     plt.yscale('log')
     plt.scatter(xs, ys1, c='green', label='Iterative Fixed Pivot')     # iter fixed
-    plt.scatter(xs, ys2, c='blue', label='Iterative Random Pivot')      # iter random
+    plt.scatter(xs, ys2, c='blue', label='Iterative Random Pivot')     # iter random
     plt.scatter(xs, ys3, c='red', label="Recursive Fixed Pivot")       # recursion fixed
-    plt.scatter(xs, ys4, c='orange', label="Recursive Random Pivot")    # recursion random
+    plt.scatter(xs, ys4, c='orange', label="Recursive Random Pivot")   # recursion random
     plt.legend(title="Quick Select")
     plt.show()
 
