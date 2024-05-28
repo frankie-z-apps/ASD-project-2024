@@ -80,7 +80,7 @@ def main():
     n_min = 100
     n_max = 100000
     times = 100
-    tot_k_indices = 3
+    tot_k_indices = 50
     max_random_value = 1000000
 
     A = n_min
@@ -110,7 +110,8 @@ def main():
     plt.scatter(xs, ys3, c='orange', label='Median of Medians Select')
     plt.legend(title="Algorithms comparison")
     
-    plt.annotate(f'Number of k-tries for array: {tot_k_indices}\nMax random value for array element: {max_random_value}\nTotal execution time (seconds): {main_duration_end - main_duration_start}',xy=(0.0, -0.12), xycoords='axes fraction', ha='left', fontsize=7)
+    plt.annotate(f'Number of k-tests for array: {tot_k_indices}\nMax random value for array element: {max_random_value}\nTotal execution time (seconds): {main_duration_end - main_duration_start}',xy=(0.0, -0.12), xycoords='axes fraction', ha='left', fontsize=7)
+    plt.annotate(f'Minimum array length: {n_min}\nMaximum array length: {n_max}', xy=(1.0, -0.12), xycoords='axes fraction', ha='right', fontsize=7 )
     plt.show()
 
 main()
