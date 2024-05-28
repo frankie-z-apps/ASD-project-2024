@@ -21,7 +21,7 @@ HEAP_SELECT:
 
 MEDIAN_OF_MEDIANS_SELECT:
 
--
+-   differentiate between median of medians algorithm and median of medians SELECT algorithm -> achieve modularity
 
 
 BENCHMARK:
@@ -40,3 +40,7 @@ BENCHMARK:
 
 -   study the effect of varying the range of number values for the elements of 
     the arrays
+
+-   to eliminate the noise produced by copying the same array for every 
+    test for all the k-values, we could initialize all the copies beforehand,
+    so that the initialization time won't be counted
