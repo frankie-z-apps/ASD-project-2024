@@ -14,7 +14,6 @@ def init_array_copies(n, max_rand_val, tot_k_values):
     for i in range(n):
         arr[i] = random.randint(0, max_rand_val)
 
-    #arr = [[None for _ in range(tot_k_values)] for i in range(n)]
     arr_copies = [arr.copy() for i in range(tot_k_values)]
     return arr_copies
 
@@ -52,9 +51,7 @@ def measure(n, max_rand_val, function, mean_resolution, tot_k_values):
     count = 0
     #start_time = time.perf_counter()      #  <-----------  TODO (initially timer started here -see below-)
     arr_copies = init_array_copies(n, max_rand_val, tot_k_values) # initialize all k copies of the same array
-    #print(f"Array copies: {arr_copies}")
     k_values = init_indexes(n, tot_k_values)
-    #print(f"K-values: {k_values}")
     start_time = time.perf_counter()
     
     while True:
@@ -62,9 +59,7 @@ def measure(n, max_rand_val, function, mean_resolution, tot_k_values):
         # start_time = time.perf_counter()
         
         for k in range(tot_k_values):
-            #print(f"Array number {k}: {arr_copies[k]}\nK_values: {k_values}\nCurrent k-value: {k_values[k]}\nValue of n: {n}")
             # this way all function must have same signature (required args)
-            #print(f"Arr_copies[k]: {arr_copies[k]}\nlen(arr_copies[k]): {len(arr_copies[k])}")
             function(arr_copies[k], 0, len(arr_copies[k]), k_values[k])
 
         count = count + 1
