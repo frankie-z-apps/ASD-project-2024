@@ -69,7 +69,7 @@ def measure(n, max_rand_val, function, mean_resolution, tot_indexes):
 def main():
     resolution = calculate_mean_resolution()
     n_min = 100
-    n_max = 100000
+    n_max = 10000
     times = 100
     tot_k_indices = 5
     A = n_min
