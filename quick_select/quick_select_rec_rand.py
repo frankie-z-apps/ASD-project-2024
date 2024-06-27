@@ -27,32 +27,7 @@ def quick_select_tested(a, low, high, k):
     else: 
         return quick_select_tested(a, r+1, high, k)
 
-'''
-def partition(a, low, high):
-    p = a[high-1]
-    i = low
-    for j in range(low, high-1):
-        if a[j] <= p:
-            a[i], a[j] = a[j], a[i]
-            i += 1
-    a[i], a[high-1] = a[high-1], a[i]
-    return i 
-'''
-'''
-def rand_partition(a, low, high):
-    i = random.randint(low, high-1)
-    a[high-1], a[i] = a[i], a[high-1]
-    return partition(a, low, high)
-'''
 
-#'''Tests:
-'''
-arr = [5, 4, 3, 2, 1]
-print(quick_select_rec(arr, 0, len(arr), 2))
-print(quick_select_rec(arr, 0, len(arr), 4))
-print(quick_select_rec(arr, 0, len(arr), 6))
-'''
-#'''
 if __name__ == "__main__":
 
     def input_array():
