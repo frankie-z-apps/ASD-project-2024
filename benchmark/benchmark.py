@@ -2,6 +2,10 @@ import time
 import random
 import matplotlib.pyplot as plt
 
+import quick_select.quick_select_rec_rand as quick
+import heap_select.heap_select_min_max as heap
+import median_of_medians_select.med_of_meds_03 as medians
+
 
 def init_array(n, max_rand_val):
     random.seed()
@@ -61,14 +65,15 @@ def main():
     resolution = calculate_mean_resolution()
     max_rand_val = 1000000
     n_begin = 100
-    n_end = 10000
+    n_end = 100000
     times = 100
     k_tests = 5
     A = n_begin
     B = (n_end / n_begin) ** (1/99)
     points = [(None, None, None)] * times
 
-    # we want each algorithm to be tested on the same array with the same k-values
+    main_duration_start = time.monotonic()
+
 
     for i in range(times):
         print(f"\r{i} -> ", end='')
@@ -80,20 +85,24 @@ def main():
 
         
         points[i] = (n, 
-            measure(arr, function, resolution, k_values),
-            measure(arr, function, resolution, k_values),
-            measure(arr, function, resolution, k_values),
-            #measure(n, 1000000, rec_rand.quick_select_rec_rand, resolution, k_tests)
+            measure(arr, quick.quick_select_rec_rand, resolution, k_values),
+            measure(arr, heap.heap_select, resolution, k_values),
+            measure(arr, medians.median_of_medians_select, resolution, k_values),
         )
+
+    main_duration_end = time.monotonic()
 
     xs, ys1, ys2, ys3 = zip(*points)
     plt.xscale('log')
     plt.yscale('log')
-    plt.scatter(xs, ys1, c='blue', label='First Version')  
-    plt.scatter(xs, ys2, c='green', label='Second Version')
-    plt.scatter(xs, ys3, c='orange', label='Third Version')   
-    #plt.scatter(xs, ys4, c='orange', label="Recursive Random Pivot")    # recursion random
-    plt.legend(title="Median of Medians Select")
+    plt.scatter(xs, ys1, c='blue', label='Quick Select')  
+    plt.scatter(xs, ys2, c='green', label='Heap Select')
+    plt.scatter(xs, ys3, c='orange', label='Median of Medians Select')   
+    plt.legend(title="Algorithms comparison")
+
+    plt.annotate(f'Number of k-tests for array: {k_tests}\nMax random value for array element: {max_rand_val}\nTotal execution time (seconds): {main_duration_end - main_duration_start}',xy=(0.0, -0.12), xycoords='axes fraction', ha='left', fontsize=7)
+    plt.annotate(f'Minimum array length: {n_begin}\nMaximum array length: {n_end}', xy=(1.0, -0.12), xycoords='axes fraction', ha='right', fontsize=7 )
+
     plt.show()
 
 main()
