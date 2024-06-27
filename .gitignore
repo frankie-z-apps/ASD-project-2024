@@ -1,1 +1,3 @@
 *.pyc
+*/benchmark_*
+*/__init__.py
