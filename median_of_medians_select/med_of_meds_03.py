@@ -1,4 +1,4 @@
-# THIRD VERSION (ITERATIVE?)
+# THIRD VERSION (ITERATIVE)
 
 # sort the elements of arr in the interval [p,q]
 def insertion_sort(arr, p, q):
@@ -57,9 +57,9 @@ def median_of_medians(arr, p, q):
 
         for i in range(p, q, 5):
             if i + 5 <= q:
-                m = median_of_medians(arr, i, i+5)
+                m = median(arr, i, i+5)
             else:
-                m = median_of_medians(arr, i, q)
+                m = median(arr, i, q)
             
             arr[med_ind], arr[m] = arr[m], arr[med_ind]
             med_ind += 1
