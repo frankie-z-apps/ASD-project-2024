@@ -154,7 +154,7 @@ class AuxMaxHeap(MaxHeap):
             self.move_up(p)
 
 
-def heap_select(arr, low, high, k): # complessità O(n + k log k)
+def heap_select(arr, p, q, k): # complessità O(n + k log k)
     # a seconda del valore di k, lavoro con max-Heap o min-Heap
     if k > len(arr)//2:
         # a seconda che utilizzi max-Heap o min-Heap cambia il numero di iterazioni per trovare 
