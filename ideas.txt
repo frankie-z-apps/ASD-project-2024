@@ -44,3 +44,5 @@ BENCHMARK:
 -   to eliminate the noise produced by copying the same array for every 
     test for all the k-values, we could initialize all the copies beforehand,
     so that the initialization time won't be counted
+
+-   run tests on the same array for each algorithm
