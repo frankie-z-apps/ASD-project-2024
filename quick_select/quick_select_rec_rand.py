@@ -1,4 +1,5 @@
 import quick_select.rand_partition as rand_partition
+#import rand_partition
 
 # QUICK SELECT RECURSIVE VERSION (RANDOMIZED PIVOT)
 
@@ -52,13 +53,11 @@ print(quick_select_rec(arr, 0, len(arr), 4))
 print(quick_select_rec(arr, 0, len(arr), 6))
 '''
 #'''
+if __name__ == "__main__":
 
+    def input_array():
+        return [int(x) for x in input().split(" ") if x]
 
-def input_array():
-    return [int(x) for x in input().split(" ") if x]
-
-'''
-a = input_array()
-k = int(input())
-print(quick_select_rec_rand(a, 0, len(a), k))
-'''
+    a = input_array()
+    k = int(input())
+    print(quick_select_rec_rand(a, 0, len(a), k))
