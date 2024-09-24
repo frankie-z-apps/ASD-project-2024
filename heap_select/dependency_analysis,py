@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import heap_select_min_max as h_min_max
 import heap_select_min as h_min
 
-# DEPENDENCE ANALYSIS: how k parameter affects performance of heap-select algorithm
+# DEPENDENCY ANALYSIS: how k parameter affects performance of heap-select algorithm
 
 
 def init_array(n, max_rand_val):                                        # initialize the array with random values
