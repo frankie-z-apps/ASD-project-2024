@@ -61,9 +61,9 @@ def main():
     resolution = calculate_mean_resolution(1000)
     max_rand_val = 1000000
     n_begin = 100
-    n_end = 10000
+    n_end = 100000
     times = 100
-    k_tests = 100
+    k_tests = 10
     A = n_begin
     B = (n_end / n_begin) ** (1/99)
     points = [(None, None, None)] * times
@@ -108,6 +108,25 @@ def main():
                 xycoords='axes fraction', \
                 ha='right', \
                 fontsize=7 )
+    
+
+    # Disegna le rette di riferimento
+
+    # Riferimento lineare per QuickSelect
+    k_qs = ys1[0] / xs[0]  # Calcola il coefficiente di proporzionalità
+    tempoLineare_qs = [(k_qs * x) for x in xs]  # Rette lineare
+    plt.plot(xs, tempoLineare_qs, '--', color='green', label='Andamento Lineare QS')
+
+    # Riferimento lineare per HeapSelect
+    k_hs = ys2[0] / xs[0]  # Calcola il coefficiente di proporzionalità
+    tempoLineare_hs = [(k_hs * x) for x in xs]  # Rette lineare
+    plt.plot(xs, tempoLineare_hs, '--', color='blue', label='Andamento Lineare HS')
+
+    
+    # Riferimento lineare per MedianOfMedians
+    k_mom = ys3[0] / xs[0]  # Calcola il coefficiente di proporzionalità
+    tempoLineare_mom = [(k_mom * x) for x in xs]  # Rette lineare
+    plt.plot(xs, tempoLineare_mom, '--', color='red', label='Andamento Lineare MoM')
 
     plt.show()
 
