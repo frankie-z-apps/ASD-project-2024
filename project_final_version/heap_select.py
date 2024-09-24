@@ -1,5 +1,4 @@
-# HEAP SELECT WITH MAX/MIN-HEAP 
-
+# HEAP SELECT WITH MAX/MIN-HEAP - ITERATIVE VERSION
 
 '''
     Representation of Heap data structure
@@ -68,16 +67,21 @@ class MinHeap(Heap):
     # put element at index i in its correct place,
     # keeping the structure a valid Min-Heap
     def heapify(self, i):
+        min = i
         l = self.left(i)
         r = self.right(i)
-        min = i
-        if l != None and self.heap[l] < self.heap[min]:
+
+        while (l != None):
             min = l
-        if r != None and self.heap[r] < self.heap[min]:
-            min = r
-        if min != i:
-            self.heap[i], self.heap[min] = self.heap[min], self.heap[i]
-            self.heapify(min)
+            if r != None and self.heap[r] < self.heap[min]:
+                min = r
+            if self.heap[min] < self.heap[i]:
+                self.heap[i], self.heap[min] = self.heap[min], self.heap[i]
+                i = min
+                l = self.left(i)
+                r = self.right(i)
+            else:
+                break
 
     
     # insert value in Min-Heap and put it in its place, 
@@ -90,9 +94,10 @@ class MinHeap(Heap):
     # move up element at index i until it is in its correct place
     def move_up(self, i):
         p = self.parent(i)
-        if p != None and self.heap[i] < self.heap[p]:
+        while (p!= None and self.heap[i] < self.heap[p]):
             self.heap[i], self.heap[p] = self.heap[p], self.heap[i]
-            self.move_up(p)
+            i = p
+            p = self.parent(i)
 
 
 '''
@@ -116,16 +121,21 @@ class MaxHeap(Heap):
     # put element at index i in its correct place,
     # keeping the structure a valid Max-Heap
     def heapify(self, i):
+        max = i
         l = self.left(i)
         r = self.right(i)
-        max = i
-        if l != None and self.heap[l] > self.heap[max]:
+
+        while (l != None):
             max = l
-        if r != None and self.heap[r] > self.heap[max]:
-            max = r
-        if max != i:
-            self.heap[i], self.heap[max] = self.heap[max], self.heap[i]
-            self.heapify(max)
+            if r != None and self.heap[r] > self.heap[max]:
+                max = r
+            if self.heap[max] > self.heap[i]:
+                self.heap[i], self.heap[max] = self.heap[max], self.heap[i]
+                i = max
+                l = self.left(i)
+                r = self.right(i)
+            else:
+                break
 
     
     # insert value in Max-Heap and put it in its place, 
@@ -138,9 +148,10 @@ class MaxHeap(Heap):
     # move up element at index i until it is in its correct place
     def move_up(self, i):
         p = self.parent(i)
-        if p != None and self.heap[i] > self.heap[p]:
+        while (p!= None and self.heap[i] > self.heap[p]):
             self.heap[i], self.heap[p] = self.heap[p], self.heap[i]
-            self.move_up(p)
+            i = p
+            p = self.parent(i)
 
 
 '''
@@ -151,24 +162,30 @@ class AuxMinHeap(MinHeap):
     # put element at index i in its correct place, 
     # keeping the structure a valid auxiliary Min-Heap 
     def heapify(self, i):
+        min = i
         l = self.left(i)
         r = self.right(i)
-        min = i
-        if l != None and self.heap[l][0] < self.heap[min][0]:
+
+        while (l != None):
             min = l
-        if r != None and self.heap[r][0] < self.heap[min][0]:
-            min = r
-        if min != i:
-            self.heap[i], self.heap[min] = self.heap[min], self.heap[i]
-            self.heapify(min)
+            if r != None and self.heap[r][0] < self.heap[min][0]:
+                min = r
+            if self.heap[min][0] < self.heap[i][0]:
+                self.heap[i], self.heap[min] = self.heap[min], self.heap[i]
+                i = min
+                l = self.left(i)
+                r = self.right(i)
+            else:
+                break
     
 
     # move up element at index i until it is in its correct place
     def move_up(self, i):
         p = self.parent(i)
-        if p != None and self.heap[i][0] < self.heap[p][0]:
+        while (p != None and self.heap[i][0] < self.heap[p][0]):
             self.heap[i], self.heap[p] = self.heap[p], self.heap[i]
-            self.move_up(p)
+            i = p
+            p = self.parent(i)
 
 
 '''
@@ -179,16 +196,21 @@ class AuxMaxHeap(MaxHeap):
     # put element at index i in its correct place, 
     # keeping the structure a valid auxiliary Max-Heap 
     def heapify(self, i):
+        max = i
         l = self.left(i)
         r = self.right(i)
-        max = i
-        if l != None and self.heap[l][0] > self.heap[max][0]:
+
+        while (l != None):
             max = l
-        if r != None and self.heap[r][0] > self.heap[max][0]:
-            max = r
-        if max != i:
-            self.heap[i], self.heap[max] = self.heap[max], self.heap[i]
-            self.heapify(max)
+            if r != None and self.heap[r][0] > self.heap[max][0]:
+                max = r
+            if self.heap[max][0] > self.heap[i][0]:
+                self.heap[i], self.heap[max] = self.heap[max], self.heap[i]
+                i = max
+                l = self.left(i)
+                r = self.right(i)
+            else:
+                break
     
 
     # move up element at index i until it is in its correct place
@@ -197,7 +219,8 @@ class AuxMaxHeap(MaxHeap):
         if p != None and self.heap[i][0] > self.heap[p][0]:
             self.heap[i], self.heap[p] = self.heap[p], self.heap[i]
             self.move_up(p)
-
+            i = p
+            p = self.parent(i)
 
 
 '''
@@ -236,7 +259,7 @@ def heap_select(arr, start, end, k):
     Return the k-th smallest element in arr (without sorting it) 
     making use of the Min-Heap data structure.
 '''
-def min_heap_select(arr, p, q, k):
+def min_heap_select(arr, start, end, k):
     main_heap = MinHeap()
     main_heap.build_heap(arr)
     
