@@ -6,8 +6,9 @@ import quick_select as quick
 import heap_select as heap
 import median_of_medians_select as median
 
+
 '''
-    initialize array with random values
+    Initialize array with random values
     in interval [0, max_rand_val]
 '''
 def init_array(n, max_rand_val):                                        
@@ -19,7 +20,7 @@ def init_array(n, max_rand_val):
 
 
 '''
-    extract k random indexes
+    Extract k random indexes
     in interval [0, n-1]
 '''
 def init_indexes(n, k):                                                 
@@ -30,7 +31,7 @@ def init_indexes(n, k):
 
 
 '''
-    calculate smallest time interval
+    Calculate smallest time interval
     recorded by system
 '''
 def resolution():                                                      
@@ -42,19 +43,18 @@ def resolution():
 
 
 '''
-    calculate mean resolution
-    over n total times
+    Calculate mean resolution
+    over n total iterations
 '''
-def calculate_mean_resolution(times):                              
+def calculate_mean_resolution(iterations):                              
     tot_sum = 0    
-    for i in range(times):
+    for i in range(iterations):
         tot_sum += resolution()
-    return tot_sum / times
-
+    return tot_sum / iterations
 
 
 '''
-    measure the mean time required for the execution
+    Measure the mean time required for the execution
     of a function with multiple k-values on the same array
 '''
 def measure(arr, function, mean_resolution, k_list):                    
@@ -76,21 +76,25 @@ def measure(arr, function, mean_resolution, k_list):
     return (end_time - start_time) / count
 
 
-
+'''
+    Test every algorithm on the same array with same k values
+    Measure time required for completion with array of increasing lenght
+    Plot the results and return graph
+'''
 def main():
     resolution = calculate_mean_resolution(1000)
     max_rand_val = 1000000
-    n_begin = 10
+    n_begin = 100
     n_end = 100000
-    times = 100
+    iterations = 100
     k_tests = 10
     A = n_begin
     B = (n_end / n_begin) ** (1/99)
-    points = [(None, None, None)] * times
+    points = [(None, None, None)] * iterations
 
     main_duration_start = time.monotonic()
 
-    for i in range(times):
+    for i in range(iterations):
         n = int(A * (B ** i))
         print(f"Progress: {i}%\t Array size: {n}", end='\r')
 
