@@ -1,5 +1,5 @@
-import quick_select.partition as partition
-#import partition
+#import quick_select.partition as partition
+import partition
 import random
 
 
