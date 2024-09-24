@@ -20,6 +20,14 @@ def init_array(n, max_rand_val):
 
 
 '''
+    Create n copies of arr
+'''
+def create_copies(arr, n):
+    copies = [arr] * n
+    return copies
+
+
+'''
     Calculate smallest time interval
     recorded by system
 '''
@@ -53,8 +61,8 @@ def measure(arr, function, mean_resolution, k):
     start_time = time.monotonic()
 
     while True:        
-        a_copy = arr.copy()
-        function(a_copy, 0, len(a_copy), k)
+        #a_copy = arr.copy()
+        function(arr, 0, len(arr), k)
 
         count = count + 1
         end_time = time.monotonic()
@@ -75,9 +83,12 @@ def measure(arr, function, mean_resolution, k):
 def main():
     array_length = int(input("Input test array size: "))
     resolution = calculate_mean_resolution(1000)
-    max_rand_val = 1000000
-    points = [(None)] * array_length
+    max_rand_val = 10
+    points = [(None, None)] * array_length
     arr = init_array(array_length, max_rand_val)
+    #print("Creating array copies...")
+    copies = create_copies(arr, array_length)
+    #print("Done")
 
     main_duration_start = time.monotonic()
 
@@ -85,48 +96,25 @@ def main():
         print(f"Test number: {i+1}  Progress: {int((i / array_length)*100)}%", end='\r')
 
         points[i] = (i, 
-            measure(arr, heap.heap_select, resolution, i),
-            #measure(arr, heap.min_heap_select, resolution, i)
+            measure(copies[i], heap.heap_select, resolution, i),
+            measure(copies[i], heap.min_heap_select, resolution, i)
         )
 
     main_duration_end = time.monotonic()
 
-    xs, ys1 = zip(*points)
+    xs, ys1, ys2 = zip(*points)
     plt.xscale('linear')
     plt.yscale('linear')
     plt.scatter(xs, ys1, c='lightgreen', label='Min-Max heap')  
-    #plt.scatter(xs, ys2, c='lightblue', label='Min heap')
+    plt.scatter(xs, ys2, c='orange', label='Min heap')
     plt.legend(title="K-dependency analysis")
 
 
-    plt.annotate(f'Array size: {array_length}\n\
-            Max random value for array element: {max_rand_val}\n\
-            Total execution time (seconds): {main_duration_end - main_duration_start}', \
-                xy=(0.0, -0.12), \
+    plt.annotate(f"Array size: {array_length}\nMax random value for array element: {max_rand_val}\nTotal execution time (seconds): {main_duration_end - main_duration_start}", \
+                xy=(0.0, -0.128), \
                 xycoords='axes fraction', \
                 ha='left', \
                 fontsize=7)
-    
-    '''
-    # Disegna le rette di riferimento
-
-    # Riferimento lineare per QuickSelect
-    k_qs = ys1[0] / xs[0]  # Calcola il coefficiente di proporzionalità
-    tempoLineare_qs = [(k_qs * x) for x in xs]  # Rette lineare
-    plt.plot(xs, tempoLineare_qs, '--', color='green', label='Andamento Lineare QS')
-
-    # Riferimento lineare per HeapSelect
-    k_hs = ys2[0] / xs[0]  # Calcola il coefficiente di proporzionalità
-    tempoLineare_hs = [(k_hs * x) for x in xs]  # Rette lineare
-    plt.plot(xs, tempoLineare_hs, '--', color='blue', label='Andamento Lineare HS')
-
-    
-    # Riferimento lineare per MedianOfMedians
-    k_mom = ys3[0] / xs[0]  # Calcola il coefficiente di proporzionalità
-    tempoLineare_mom = [(k_mom * x) for x in xs]  # Rette lineare
-    plt.plot(xs, tempoLineare_mom, '--', color='red', label='Andamento Lineare MoM')
-    '''
-
 
     plt.show()
 
