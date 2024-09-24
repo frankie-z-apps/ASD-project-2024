@@ -1,4 +1,8 @@
-Ideas to optimizing the execution time of algorithms:
+Ideas to optimize the execution time of algorithms:
+
+ALL:
+
+- rename parameters of algorithms using "start/end" instead of "low/high"
 
 
 E-LEARNING TESTS:
@@ -9,19 +13,19 @@ E-LEARNING TESTS:
 QUICK_SELECT:
 
 -   run the validity test on parameters only once and not for every recursive call
--   try with iterative version instead of recursive
--   differentiate between randomized partition and
+v   try with iterative version instead of recursive
+v   differentiate between randomized partition and
     fixed-pivot partition
 
 
 HEAP_SELECT:
 
--
+- eliminate recursion in all Heap methods
 
 
 MEDIAN_OF_MEDIANS_SELECT:
 
--   differentiate between median of medians algorithm and median of medians SELECT algorithm -> achieve modularity
+v   differentiate between median of medians algorithm and median of medians SELECT algorithm -> achieve modularity
 
 
 BENCHMARK:
@@ -29,14 +33,14 @@ BENCHMARK:
 -   import directly a single algorithm-module instead of algorithms.py file
     so that is easier to modify and test a single module at a time
 
--   run specific tests on different versions of the SAME algorithm
+v   run specific tests on different versions of the SAME algorithm
     to get an idea whether the modifications work or not,
     and to identify the one that performs better
 
 -   verify that changing the starting position of the timer in 
     measure() function does not mess up things
 
--   add a legenda explaining the colors associated with the algorithms
+v   add a legenda explaining the colors associated with the algorithms
 
 -   study the effect of varying the range of number values for the elements of 
     the arrays
@@ -45,4 +49,4 @@ BENCHMARK:
     test for all the k-values, we could initialize all the copies beforehand,
     so that the initialization time won't be counted
 
--   run tests on the same array for each algorithm
+v   run tests on the same array for each algorithm
