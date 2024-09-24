@@ -264,4 +264,4 @@ if __name__ == "__main__":
 
     arr = input_array()
     k = int(input())
-    print(heap_select(arr, k))
+    print(heap_select(arr, None, None, k))
