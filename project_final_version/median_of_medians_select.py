@@ -1,7 +1,8 @@
 # MEDIAN OF MEDIANS SELECT
 
 
-# sort the elements of arr in the interval [start,end]
+# sort in ascending order
+# the sub-array arr[start, end]
 def insertion_sort(arr, start, end):
     for i in range(start+1, end):
         key = arr[i]
@@ -12,8 +13,8 @@ def insertion_sort(arr, start, end):
         arr[j+1] = key
 
 
-# return 
-def partition_r(arr, start, end, r):
+# return index of arr[r] as if arr were ordered
+def partition_med(arr, start, end, r):
     pivot = arr[r]
     arr[r], arr[end-1] = arr[end-1], arr[r]
     i = start - 1
@@ -27,46 +28,50 @@ def partition_r(arr, start, end, r):
     return i + 1
 
 
-# return the INDEX of MEDIAN element of a sub-array arr[start,end]
+# return index of median element in sub-array arr[start, end]
 def median(arr, start, end):
     insertion_sort(arr, start, end)
-    median_index = (end-start) // 2
-    return start+median_index   # if I return the index of median element,
-                            # we can use it to switch the elements in arr, grouping all the medians together
+    relative_next_median_index = (end - start) // 2
+    absolute_next_median_index = start + relative_next_median_index
+    return absolute_next_median_index
 
 
-# return the k-th smaller element in arr
+'''
+    Return the k-th smallest element in arr (without sorting it) 
+    making use of the median of medians algorithm.
+'''
 def median_of_medians_select(arr, start, end, k):
     while start <= end:
         m = median_of_medians(arr, start, end)
-        r = partition_r(arr, start, end, m)
+        r = partition_med(arr, start, end, m)
 
-        if r == k-1:
-            return arr[r]
-        elif r > k-1:
+        if r > k-1:
             end = r
-        else:
+        elif r < k-1:
             start = r+1
+        else:
+            return arr[r]
+        
     print("Index Error!")
 
 
-# return the index of median element in the sub-array arr[start,end]
+# return index of median element in sub-array arr[start,end]
 def median_of_medians(arr, start, end):
-    if end - start <= 5:
-        return median(arr, start, end)
-    else:
-        med_ind = start
+    if end - start > 5:
+        next_median_index = start
 
         for i in range(start, end, 5):
             if i + 5 <= end:
-                m = median(arr, i, i+5)
+                current_median = median(arr, i, i+5)
             else:
-                m = median(arr, i, end)
+                current_median = median(arr, i, end)
             
-            arr[med_ind], arr[m] = arr[m], arr[med_ind]
-            med_ind += 1
+            arr[next_median_index], arr[current_median] = arr[current_median], arr[next_median_index]
+            next_median_index += 1
         
-        return median_of_medians(arr, start, med_ind) 
+        return median_of_medians(arr, start, next_median_index)
+    else:
+        return median(arr, start, end)
 
 
 if __name__ == "__main__":
