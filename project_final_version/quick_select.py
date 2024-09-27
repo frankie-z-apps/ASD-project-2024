@@ -18,8 +18,8 @@ def partition(arr, start, end):
 
 
 '''
-    Return index that element at index i (randomly chosen) would occupy
-    if arr were to be sorted    
+    Return index of arr[i] - where i is randomly chosen - 
+    as if arr were ordered    
 '''
 def rand_partition(arr, start, end):
     i = random.randint(start, end-1)
