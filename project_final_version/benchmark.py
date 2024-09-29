@@ -47,10 +47,10 @@ def resolution():
     over n total iterations
 '''
 def calculate_mean_resolution(iterations):                              
-    tot_sum = 0    
+    tot_q_sum = 0    
     for i in range(iterations):
-        tot_sum += resolution()
-    return tot_sum / iterations
+        tot_q_sum += resolution()
+    return tot_q_sum / iterations
 
 
 '''
@@ -85,12 +85,13 @@ def main():
     resolution = calculate_mean_resolution(1000)
     max_rand_val = 1000000
     n_begin = 100
-    n_end = 100000
+    n_end = 10000
     iterations = 100
-    k_tests = 10
+    k_tests = 15
     A = n_begin
     B = (n_end / n_begin) ** (1/99)
     points = [(None, None, None)] * iterations
+    times = [(None, None, None)] * iterations
 
     main_duration_start = time.monotonic()
 
@@ -101,15 +102,20 @@ def main():
         arr = init_array(n, max_rand_val)
         k_values = init_indexes(n, k_tests)
 
-        points[i] = (n, 
-            measure(arr, quick.quick_select, resolution, k_values),
-            measure(arr, heap.heap_select, resolution, k_values),
-            measure(arr, median.median_of_medians_select, resolution, k_values),
-        )
+        q = measure(arr, quick.quick_select, resolution, k_values)
+        h = measure(arr, heap.heap_select, resolution, k_values)
+        m = measure(arr, median.median_of_medians_select, resolution, k_values)
 
+        points[i] = (n, 
+            q,
+            h,
+            m            
+        )
+     
     main_duration_end = time.monotonic()
 
     xs, ys1, ys2, ys3 = zip(*points)
+
     plt.xscale('log')
     plt.yscale('log')
     plt.scatter(xs, ys1, c='lightblue', label='Quick Select')  
@@ -133,23 +139,31 @@ def main():
                 fontsize=7 )
     
 
-    # Disegna le rette di riferimento
+    '''
+        Draw mean execution time reference line for each algorithm
+    '''
 
-    # Riferimento lineare per QuickSelect
-    k_qs = ys1[0] / xs[0]  # Calcola il coefficiente di proporzionalità
-    tempoLineare_qs = [(k_qs * x) for x in xs]  # Rette lineare
-    plt.plot(xs, tempoLineare_qs, '--', color='blue', label='Andamento Lineare QS')
+    q_sum = 0
+    h_sum = 0
+    m_sum = 0
 
-    # Riferimento lineare per HeapSelect
-    k_hs = ys2[0] / xs[0]  # Calcola il coefficiente di proporzionalità
-    tempoLineare_hs = [(k_hs * x) for x in xs]  # Rette lineare
-    plt.plot(xs, tempoLineare_hs, '--', color='green', label='Andamento Lineare HS')
+    for i in range(iterations):
+        q_sum += ys1[i] / xs[i]
+        h_sum += ys2[i] / xs[i]
+        m_sum += ys3[i] / xs[i]
 
-    
-    # Riferimento lineare per MedianOfMedians
-    k_mom = ys3[0] / xs[0]  # Calcola il coefficiente di proporzionalità
-    tempoLineare_mom = [(k_mom * x) for x in xs]  # Rette lineare
-    plt.plot(xs, tempoLineare_mom, '--', color='red', label='Andamento Lineare MoM')
+    q_quick_select = q_sum / iterations
+    q_heap_select = h_sum / iterations
+    q_median_select = m_sum / iterations
+
+
+    mean_quick_select = [(q_quick_select * x) for x in xs]
+    mean_heap_select = [(q_heap_select * x) for x in xs]
+    mean_median_select = [(q_median_select * x) for x in xs]
+
+    plt.plot(xs, mean_quick_select, '--', color='blue', label='Tempo medio Quick Sort')
+    plt.plot(xs, mean_heap_select, '--', color='green', label='Tempo medio Heap Sort')
+    plt.plot(xs, mean_median_select, '--', color='red', label='Tempo medio Median of Median select')
 
     plt.show()
 
