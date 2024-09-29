@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 import heap_select_min_max as h_min_max
 import heap_select_min as h_min
+import heap_select_min_max_iter as h_iter
 
 # DEPENDENCY ANALYSIS: how k parameter affects performance of heap-select algorithm
 
@@ -64,9 +65,9 @@ def main():
     #k_tests = 100
     #A = n_begin
     #B = (n_end / n_begin) ** (1/99)
-    points = [(None, None)] * array_length
+    points = [(None, None, None, None)] * array_length
 
-    arr = init_array(array_length, 1000000)
+    arr = init_array(array_length, max_rand_val)
     k_values = init_indexes(array_length)
 
     main_duration_start = time.monotonic()
@@ -78,17 +79,22 @@ def main():
 
         points[i] = (i, 
             measure(arr, h_min_max.heap_select, resolution, i),
-            measure(arr, h_min.heap_select, resolution, i)
+            measure(arr, h_min.heap_select, resolution, i),
+            measure(arr, h_iter.heap_select, resolution, i),
+            measure(arr, h_iter.min_heap_select, resolution, i)
         )
 
     main_duration_end = time.monotonic()
 
-    xs, ys1, ys2 = zip(*points)
-    plt.xscale('log')
-    plt.yscale('log')
-    plt.scatter(xs, ys1, c='blue', label='Min-Max heap')  
-    plt.scatter(xs, ys2, c='green', label='Min heap')
-    plt.legend(title="K-dependence analysis")
+    xs, ys1, ys2, ys3, ys4= zip(*points)
+    plt.xscale('linear')
+    plt.yscale('linear')
+    plt.scatter(xs, ys1, c='lightblue', label='Min-Max heap rec')  
+    plt.scatter(xs, ys2, c='lightgreen', label='Min heap rec')
+    plt.scatter(xs, ys3, c='orange', label='Min-Max heap iterative')
+    plt.scatter(xs, ys4, c='red', label='Min heap iterative')
+
+    plt.legend(title="K-dependency analysis")
 
     '''
     plt.annotate(f'Number of k-tests for array: {k_tests}\n\
