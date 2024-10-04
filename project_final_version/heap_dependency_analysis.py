@@ -82,9 +82,9 @@ def measure(arr, function, mean_resolution, k):
 '''
 def main():
     array_length = int(input("Input test array size: "))
-    resolution = calculate_mean_resolution(1000)
-    max_rand_val = 10
-    points = [(None, None)] * array_length
+    resolution = calculate_mean_resolution(1000)        
+    max_rand_val = 1000000
+    points = [(None)] * array_length
     arr = init_array(array_length, max_rand_val)
     #print("Creating array copies...")
     copies = create_copies(arr, array_length)
@@ -97,16 +97,16 @@ def main():
 
         points[i] = (i, 
             measure(copies[i], heap.heap_select, resolution, i),
-            measure(copies[i], heap.min_heap_select, resolution, i)
+            #measure(copies[i], heap.select_min_heap, resolution, i)
         )
 
     main_duration_end = time.monotonic()
 
-    xs, ys1, ys2 = zip(*points)
+    xs, ys1 = zip(*points)
     plt.xscale('linear')
     plt.yscale('linear')
     plt.scatter(xs, ys1, c='lightgreen', label='Min-Max heap')  
-    plt.scatter(xs, ys2, c='orange', label='Min heap')
+    #plt.scatter(xs, ys2, c='orange', label='Min heap')
     plt.legend(title="K-dependency analysis")
 
 
