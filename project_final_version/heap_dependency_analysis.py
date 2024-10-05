@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 import heap_select as heap
 
+
 # DEPENDENCY ANALYSIS: 
 # how k parameter affects performance of heap-select algorithm
 
@@ -17,14 +18,6 @@ def init_array(n, max_rand_val):
     for i in range(n):
         arr[i] = random.randint(0, max_rand_val)
     return arr
-
-
-'''
-    Create n copies of arr
-'''
-def create_copies(arr, n):
-    copies = [arr] * n
-    return copies
 
 
 '''
@@ -54,15 +47,16 @@ def calculate_mean_resolution(iterations):
    Measure the time required for a single execution
    of function on array with given k
 '''
-def measure(arr, function, mean_resolution, k):                         
+def measure(arr, function, mean_resolution, k, executions):                         
     min_err = 0.001                                                     
     min_time = mean_resolution * ((1/min_err) + 1)                      
     count = 0                                                           
     start_time = time.monotonic()
 
-    while True:        
-        #a_copy = arr.copy()
-        function(arr, 0, len(arr), k)
+    while True:
+        for i in range(executions):
+            a_copy = arr.copy()
+            function(a_copy, 0, len(arr), k)
 
         count = count + 1
         end_time = time.monotonic()
@@ -73,49 +67,85 @@ def measure(arr, function, mean_resolution, k):
 
 
 '''
+    Run a single function over the same array
+    While k parameter iterates over every legal index of array
+    Record times for each iteration and total duration
+'''
+def test_function(function, arr, executions):
+    mean_resolution = calculate_mean_resolution(1000)
+    timings = [0] * len(arr)
+
+    test_start_time = time.monotonic()
+
+    for k in range(len(arr)):
+        print(f"Test number: {k+1}  Progress: {int((k / len(arr))*100)}%", end='\r')
+        timings[k] = (k, measure(arr, function, mean_resolution, k, executions))
+    
+    test_duration = time.monotonic() - test_start_time
+
+    return timings, test_duration
+
+
+'''
+    Put the record times of a function test on a plot
+'''
+def plot_results(timings, color, function_name):
+    xs, ys = zip(*timings)    
+    plt.scatter(xs, ys, c=color, label=function_name)
+
+
+'''
     Test heap select algorithm on given array size
     k parameter iterates over the entire array
-    so that each and every index is passed only once
+    so that each and every index is passed exactly once
     in the function call
     Measure time required for completion
     Plot results and show graph
 '''
-def main():
-    array_length = int(input("Input test array size: "))
-    resolution = calculate_mean_resolution(1000)        
+def run_dependency_test():
+    array_length = int(input("Input test array size: "))     
     max_rand_val = 1000000
-    points = [(None)] * array_length
+    executions = 5
     arr = init_array(array_length, max_rand_val)
-    #print("Creating array copies...")
-    copies = create_copies(arr, array_length)
-    #print("Done")
 
-    main_duration_start = time.monotonic()
+    main_start = time.monotonic()
 
-    for i in range(array_length):
-        print(f"Test number: {i+1}  Progress: {int((i / array_length)*100)}%", end='\r')
+    print("\nTesting Min-Max Heap Select algorithm:")
+    min_max_timings, min_max_duration = test_function(heap.heap_select, arr, executions)
+    plot_results(min_max_timings, 'lightgreen', 'Min-Max Heap')
+    print("\nDone\n\n")
 
-        points[i] = (i, 
-            measure(copies[i], heap.heap_select, resolution, i),
-            #measure(copies[i], heap.select_min_heap, resolution, i)
-        )
+    print("Testing Min-Heap Select algorithm:")
+    min_timings, min_duration = test_function(heap.select_min_heap, arr, executions)
+    plot_results(min_timings, 'orange', 'Min-Heap')
+    print("\nDone \n\n")
 
-    main_duration_end = time.monotonic()
+    main_duration = time.monotonic() - main_start
 
-    xs, ys1 = zip(*points)
+    total_execution_sum = min_max_duration + min_duration
+
+    min_max_percentage = min_max_duration / total_execution_sum
+    min_percentage = min_duration / total_execution_sum
+
     plt.xscale('linear')
     plt.yscale('linear')
-    plt.scatter(xs, ys1, c='lightgreen', label='Min-Max heap')  
-    #plt.scatter(xs, ys2, c='orange', label='Min heap')
     plt.legend(title="K-dependency analysis")
 
 
-    plt.annotate(f"Array size: {array_length}\nMax random value for array element: {max_rand_val}\nTotal execution time (seconds): {main_duration_end - main_duration_start}", \
+    plt.annotate(f'MinMax Heap duration: {min_max_duration:.6f}s  {(min_max_percentage * 100):.2f}%\nMin Heap duration: {min_duration:.6f}s  {(min_percentage * 100):.2f}%\nTotal time: {main_duration:.6f}', \
                 xy=(0.0, -0.128), \
                 xycoords='axes fraction', \
                 ha='left', \
                 fontsize=7)
 
+    plt.annotate(f'Array length: {array_length}\nMax random value in array: {max_rand_val}\nExecutions for each k-value: {executions}', \
+                xy=(1, -0.128), \
+                xycoords='axes fraction', \
+                ha='right', \
+                fontsize=7)
+
     plt.show()
 
-main()
+
+if __name__ == '__main__':
+    run_dependency_test()
