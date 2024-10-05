@@ -142,10 +142,10 @@ def plot_results(timings, color, function_name):
 '''
 def run_benchmark():
     n_start = 100
-    n_end = 500   
+    n_end = 100000   
     iterations = 100
     max_rand_val = 1000000
-    k_tests = 1
+    k_tests = 50
     samples = generate_samples(n_start, n_end, iterations, max_rand_val, k_tests)
 
     benchmark_start = time.monotonic()
@@ -177,7 +177,7 @@ def run_benchmark():
     plt.yscale('log')
     plt.legend(title="Algorithms comparison")
 
-    plt.annotate(f'Quick Sort duration: {quick_duration:.6f}s  {(quick_percentage * 100):.2f}%\nHeap Sort duration: {heap_duration:.6f}s  {(heap_percentage * 100):.2f}%\nMedian of Medians duration: {median_duration:.6f}s  {(median_percentage * 100):.2f}%\nTotal time: {benchmark_duration:.6f}', \
+    plt.annotate(f'Quick Sort duration: {quick_duration:.6f}s  {(quick_percentage * 100):.2f}%\nHeap Sort duration: {heap_duration:.6f}s  {(heap_percentage * 100):.2f}%\nMedian of Medians duration: {median_duration:.6f}s  {(median_percentage * 100):.2f}%\nTotal time: {benchmark_duration:.6f}s', \
                 xy=(0.0, -0.128), \
                 xycoords='axes fraction', \
                 ha='left', \

@@ -103,9 +103,9 @@ def plot_results(timings, color, function_name):
     Plot results and show graph
 '''
 def run_dependency_test():
-    array_length = int(input("Input test array size: "))     
+    array_length = 1000     #int(input("Input test array size: "))     
     max_rand_val = 1000000
-    executions = 5
+    executions = 20
     arr = init_array(array_length, max_rand_val)
 
     main_start = time.monotonic()
