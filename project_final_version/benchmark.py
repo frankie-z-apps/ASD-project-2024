@@ -11,8 +11,7 @@ import median_of_medians_select as median
     Initialize array with random values
     in interval [0, max_rand_val]
 '''
-def init_array(n, max_rand_val):                                        
-    random.seed()                                                       
+def init_array(n, max_rand_val):                                                       
     arr = [0] * n
     for i in range(n):
         arr[i] = random.randint(0, max_rand_val)
@@ -57,14 +56,14 @@ def calculate_mean_resolution(iterations):
     Measure the mean time required for the execution
     of a function with multiple k-values on the same array
 '''
-def measure(arr, function, mean_resolution, k_list):                    
+def measure(arr, function, mean_resolution, k_values):
     min_err = 0.001                                                     
     min_time = mean_resolution * ((1/min_err) + 1)                      
     count = 0                                                           
     start_time = time.monotonic()
 
     while True:        
-        for k in k_list:
+        for k in k_values:
             a_copy = arr.copy()
             function(a_copy, 0, len(a_copy), k)
 
@@ -77,94 +76,123 @@ def measure(arr, function, mean_resolution, k_list):
 
 
 '''
+    Run a single function over all samples
+    Record times for each iteration and total duration
+'''
+def test_function(function, samples):
+    mean_resolution = calculate_mean_resolution(1000)
+    timings = [0] * len(samples)
+    i = 0
+
+    test_start_time = time.monotonic()
+
+    for sample in samples:
+        arr = sample[0]
+        k_values = sample[1]
+        n = len(arr)
+        print(f"Array size: {n} \tProgress: {i+1}%", end='\r')
+        timings[i] = (n, measure(arr, function, mean_resolution, k_values))
+        i = i + 1
+
+    test_duration = time.monotonic() - test_start_time
+    
+    return timings, test_duration
+
+
+'''
+    Generate sample arrays over which each algorithm will be tested
+'''
+def generate_samples(n_start, n_end, iterations, max_rand_val, k_tests):
+    random.seed()
+    samples = []
+    A = n_start
+    B = (n_end / n_start) ** (1/99)
+
+    for i in range(iterations):
+        n = int(A * (B ** i))
+        a = init_array(n, max_rand_val)
+        k_values = init_indexes(n, k_tests)
+        samples.append([a, k_values])
+    
+    return samples
+
+
+'''
+    Put the record times of a function test on a plot
+    Draw a line indicating the mean value above all points
+'''
+def plot_results(timings, color, function_name):
+    xs, ys = zip(*timings)
+    sum = 0
+
+    for i in range(len(timings)):
+        sum += ys[i] / xs[i]
+    
+    q = sum / len(timings)
+    mean_slope = [(q * x) for x in xs]
+
+    plt.scatter(xs, ys, c=color, label=function_name)
+    plt.plot(xs, mean_slope, '--', c=color, label=f'Mean execution time of {function_name}')
+
+
+'''
     Test every algorithm on the same array with same k values
     Measure time required for completion with array of increasing lenght
     Plot the results and return graph
 '''
-def main():
-    resolution = calculate_mean_resolution(1000)
-    max_rand_val = 1000000
-    n_begin = 100
-    n_end = 10000
+def run_benchmark():
+    n_start = 100
+    n_end = 500   
     iterations = 100
-    k_tests = 15
-    A = n_begin
-    B = (n_end / n_begin) ** (1/99)
-    points = [(None, None, None)] * iterations
-    times = [(None, None, None)] * iterations
+    max_rand_val = 1000000
+    k_tests = 1
+    samples = generate_samples(n_start, n_end, iterations, max_rand_val, k_tests)
 
-    main_duration_start = time.monotonic()
+    benchmark_start = time.monotonic()
 
-    for i in range(iterations):
-        n = int(A * (B ** i))
-        print(f"Progress: {i}%\t Array size: {n}", end='\r')
+    print("\nTesting Quick Select algorithm:")
+    quick_timings, quick_duration = test_function(quick.quick_select, samples)
+    plot_results(quick_timings, 'lightblue', 'Quick Select')
+    print("\nDone\n\n")
 
-        arr = init_array(n, max_rand_val)
-        k_values = init_indexes(n, k_tests)
+    print("Testing Heap Select algorithm")
+    heap_timings, heap_duration = test_function(heap.heap_select, samples)
+    plot_results(heap_timings, 'lightgreen', 'Heap Select')
+    print("\nDone\n\n")
 
-        q = measure(arr, quick.quick_select, resolution, k_values)
-        h = measure(arr, heap.heap_select, resolution, k_values)
-        m = measure(arr, median.median_of_medians_select, resolution, k_values)
+    print("Testing Median of Medians Select algorithm")
+    median_timings, median_duration = test_function(median.median_of_medians_select, samples)
+    plot_results(median_timings, 'orange', 'Median of Medians Select')
+    print("\nDone\n\n")
+    
+    benchmark_duration = time.monotonic() - benchmark_start
 
-        points[i] = (n, 
-            q,
-            h,
-            m            
-        )
-     
-    main_duration_end = time.monotonic()
+    algorithm_sum = quick_duration + heap_duration + median_duration
 
-    xs, ys1, ys2, ys3 = zip(*points)
+    quick_percentage = quick_duration / algorithm_sum
+    heap_percentage = heap_duration / algorithm_sum
+    median_percentage = median_duration / algorithm_sum
 
     plt.xscale('log')
     plt.yscale('log')
-    plt.scatter(xs, ys1, c='lightblue', label='Quick Select')  
-    plt.scatter(xs, ys2, c='lightgreen', label='Heap Select')
-    plt.scatter(xs, ys3, c='orange', label='Median of Medians Select')   
     plt.legend(title="Algorithms comparison")
 
-    plt.annotate(f'Number of k-tests for array: {k_tests}\n\
-            Max random value for array element: {max_rand_val}\n\
-            Total execution time (seconds): {main_duration_end - main_duration_start}', \
-                xy=(0.0, -0.12), \
+    plt.annotate(f'Quick Sort duration: {quick_duration:.6f}s  {(quick_percentage * 100):.2f}%\nHeap Sort duration: {heap_duration:.6f}s  {(heap_percentage * 100):.2f}%\nMedian of Medians duration: {median_duration:.6f}s  {(median_percentage * 100):.2f}%\nTotal time: {benchmark_duration:.6f}', \
+                xy=(0.0, -0.128), \
                 xycoords='axes fraction', \
                 ha='left', \
                 fontsize=7)
     
-    plt.annotate(f'Minimum array length: {n_begin}\n\
-                Maximum array length: {n_end}', \
-                xy=(1.0, -0.12), \
+    plt.annotate(f'Iterations: {iterations}\nInitial array length: {n_start}\nFinal array length: {n_end}\nK tests: {k_tests}', \
+                xy=(1, -0.128), \
                 xycoords='axes fraction', \
                 ha='right', \
                 fontsize=7 )
+
+    print(f"QuickSort total duration: {quick_duration:.6f}s\nHeapSort total duration: {heap_duration:.6f}s\nMedian of Medians total duration: {median_duration:.6f}s\nTotal duration: {benchmark_duration:.6f}s")
     
-
-    '''
-        Draw mean execution time reference line for each algorithm
-    '''
-
-    q_sum = 0
-    h_sum = 0
-    m_sum = 0
-
-    for i in range(iterations):
-        q_sum += ys1[i] / xs[i]
-        h_sum += ys2[i] / xs[i]
-        m_sum += ys3[i] / xs[i]
-
-    q_quick_select = q_sum / iterations
-    q_heap_select = h_sum / iterations
-    q_median_select = m_sum / iterations
-
-
-    mean_quick_select = [(q_quick_select * x) for x in xs]
-    mean_heap_select = [(q_heap_select * x) for x in xs]
-    mean_median_select = [(q_median_select * x) for x in xs]
-
-    plt.plot(xs, mean_quick_select, '--', color='blue', label='Tempo medio Quick Sort')
-    plt.plot(xs, mean_heap_select, '--', color='green', label='Tempo medio Heap Sort')
-    plt.plot(xs, mean_median_select, '--', color='red', label='Tempo medio Median of Median select')
-
     plt.show()
 
-main()
+
+if __name__ == '__main__':
+    run_benchmark()
