@@ -1,11 +1,25 @@
 import time
 import random
 import matplotlib.pyplot as plt
+import platform
 
 import quick_select as quick
 import heap_select as heap
 import median_of_medians_select as median
 
+
+'''
+    Call a different function to get current time
+    depending on user's OS, resolving OS-related issues between methods
+'''
+def get_time():
+    os_name = platform.system()
+
+    if os_name == 'Windows':
+        return time.perf_counter()
+    else:
+        return time.monotonic()
+    
 
 '''
     Initialize array with random values
@@ -34,10 +48,10 @@ def init_indexes(n, k):
     recorded by system
 '''
 def resolution():                                                      
-    start = time.monotonic()                                           
-    while time.monotonic() == start:
+    start = get_time()
+    while get_time() == start:
         pass
-    stop = time.monotonic()
+    stop = get_time()
     return stop - start
 
 
@@ -60,7 +74,7 @@ def measure(arr, function, mean_resolution, k_values):
     min_err = 0.001                                                     
     min_time = mean_resolution * ((1/min_err) + 1)                      
     count = 0                                                           
-    start_time = time.monotonic()
+    start_time = get_time()
 
     while True:        
         for k in k_values:
@@ -68,7 +82,7 @@ def measure(arr, function, mean_resolution, k_values):
             function(a_copy, 0, len(a_copy), k)
 
         count = count + 1
-        end_time = time.monotonic()
+        end_time = get_time()
         if end_time - start_time >= min_time:
              break
 
@@ -84,7 +98,7 @@ def test_function(function, samples):
     timings = [0] * len(samples)
     i = 0
 
-    test_start_time = time.monotonic()
+    test_start_time = get_time()
 
     for sample in samples:
         arr = sample[0]
@@ -94,7 +108,7 @@ def test_function(function, samples):
         timings[i] = (n, measure(arr, function, mean_resolution, k_values))
         i = i + 1
 
-    test_duration = time.monotonic() - test_start_time
+    test_duration = get_time() - test_start_time
     
     return timings, test_duration
 
@@ -148,7 +162,7 @@ def run_benchmark():
     k_tests = 50
     samples = generate_samples(n_start, n_end, iterations, max_rand_val, k_tests)
 
-    benchmark_start = time.monotonic()
+    benchmark_start = get_time()
 
     print("\nTesting Quick Select algorithm:")
     quick_timings, quick_duration = test_function(quick.quick_select, samples)
@@ -165,7 +179,7 @@ def run_benchmark():
     plot_results(median_timings, 'orange', 'Median of Medians Select')
     print("\nDone\n\n")
     
-    benchmark_duration = time.monotonic() - benchmark_start
+    benchmark_duration = get_time() - benchmark_start
 
     algorithm_sum = quick_duration + heap_duration + median_duration
 

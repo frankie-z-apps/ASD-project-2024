@@ -1,12 +1,27 @@
 import time
 import random
 import matplotlib.pyplot as plt
+import platform
 
 import heap_select as heap
 
 
 # DEPENDENCY ANALYSIS: 
 # how k parameter affects performance of heap-select algorithm
+
+
+'''
+    Call a different function to get current time
+    depending on user's OS, resolving OS-related issues between methods
+'''
+def get_time():
+    os_name = platform.system()
+
+    if os_name == 'Windows':
+        return time.perf_counter()
+    else:
+        return time.monotonic()
+
 
 '''
     Initialize array with random values
@@ -25,10 +40,10 @@ def init_array(n, max_rand_val):
     recorded by system
 '''
 def resolution():                                                       
-    start = time.monotonic()                                            
-    while time.monotonic() == start:
+    start = get_time()
+    while get_time() == start:
         pass
-    stop = time.monotonic()
+    stop = get_time()
     return stop - start
 
 
@@ -51,7 +66,7 @@ def measure(arr, function, mean_resolution, k, executions):
     min_err = 0.001                                                     
     min_time = mean_resolution * ((1/min_err) + 1)                      
     count = 0                                                           
-    start_time = time.monotonic()
+    start_time = get_time()
 
     while True:
         for i in range(executions):
@@ -59,7 +74,7 @@ def measure(arr, function, mean_resolution, k, executions):
             function(a_copy, 0, len(arr), k)
 
         count = count + 1
-        end_time = time.monotonic()
+        end_time = get_time()
         if end_time - start_time >= min_time:
              break
 
@@ -75,13 +90,13 @@ def test_function(function, arr, executions):
     mean_resolution = calculate_mean_resolution(1000)
     timings = [0] * len(arr)
 
-    test_start_time = time.monotonic()
+    test_start_time = get_time()
 
     for k in range(len(arr)):
         print(f"Test number: {k+1}  Progress: {int((k / len(arr))*100)}%", end='\r')
         timings[k] = (k, measure(arr, function, mean_resolution, k, executions))
     
-    test_duration = time.monotonic() - test_start_time
+    test_duration = get_time() - test_start_time
 
     return timings, test_duration
 
@@ -108,7 +123,7 @@ def run_dependency_test():
     executions = 20
     arr = init_array(array_length, max_rand_val)
 
-    main_start = time.monotonic()
+    main_start = get_time()
 
     print("\nTesting Min-Max Heap Select algorithm:")
     min_max_timings, min_max_duration = test_function(heap.heap_select, arr, executions)
@@ -120,7 +135,7 @@ def run_dependency_test():
     plot_results(min_timings, 'orange', 'Min-Heap')
     print("\nDone \n\n")
 
-    main_duration = time.monotonic() - main_start
+    main_duration = get_time() - main_start
 
     total_execution_sum = min_max_duration + min_duration
 
