@@ -156,10 +156,10 @@ def plot_results(timings, color, function_name):
 '''
 def run_benchmark():
     n_start = 100
-    n_end = 100000   
+    n_end = 10000   
     iterations = 100
     max_rand_val = 1000000
-    k_tests = 50
+    k_tests = 20
     samples = generate_samples(n_start, n_end, iterations, max_rand_val, k_tests)
 
     benchmark_start = get_time()

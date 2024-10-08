@@ -120,7 +120,7 @@ def plot_results(timings, color, function_name):
 def run_dependency_test():
     array_length = 1000     #int(input("Input test array size: "))     
     max_rand_val = 1000000
-    executions = 20
+    executions = 10
     arr = init_array(array_length, max_rand_val)
 
     main_start = get_time()
