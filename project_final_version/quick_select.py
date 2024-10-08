@@ -28,13 +28,23 @@ def rand_partition(arr, start, end):
 
 
 '''
-    Perform valididy test on parameters and call select algorithm
+    Perform valididy test on parameters and call select algorithm (random pivot)
 '''
-def quick_select(a, start, end, k):
+def quick_select(arr, start, end, k):
     if not(are_parameters_valid(start, end, k)):
         print(f"Index of k({k}) is out of range.\nPlease insert a valid index.")
     else:
-        return quick_select_tested(a, start, end, k)
+        return quick_select_tested(arr, start, end, k)
+    
+
+'''
+    Perform validity test on parameters and call select algorithm (fixed pivot)
+'''
+def quick_select_fixed(arr, start, end, k):
+    if not(are_parameters_valid(start, end, k)):
+        print(f"Index of k({k}) is out of range.\nPlease insert a valid index.")
+    else:
+        return quick_select_tested_fixed(arr, start, end, k)
     
 
 '''
@@ -48,16 +58,32 @@ def are_parameters_valid(start, end, k):
     Return the k-th smallest element in arr (without sorting it)
     using the (randomized) partition algorithm.
 '''
-def quick_select_tested(a, start, end, k):
+def quick_select_tested(arr, start, end, k):
     while start < end:
-        r = rand_partition(a, start, end)
+        r = rand_partition(arr, start, end)
         if r == k-1:
-            return a[r]
+            return arr[r]
         elif r > k-1:
             end = r
         else:
             start = r+1
-    return a[start]
+    return arr[start]
+
+
+'''
+    Return the k-th smallest element in arr (without sorting it)
+    using the (non-randomized) partition algorithm.
+'''
+def quick_select_tested_fixed(arr, start, end, k):
+    while start < end:
+        r = partition(arr, start, end)
+        if r == k-1:
+            return arr[r]
+        elif r > k-1:
+            end = r
+        else:
+            start = r+1
+    return arr[start]
 
 
 if __name__ == "__main__":
