@@ -93,7 +93,7 @@ def test_function(function, arr, executions):
     test_start_time = get_time()
 
     for k in range(len(arr)):
-        print(f"Test number: {k+1}  Progress: {int((k / len(arr))*100)}%", end='\r')
+        print(f"Test number: {k+1:8}\tProgress: {int(((k+1) / len(arr))*100):3.2f}%", end='\r')
         timings[k] = (k, measure(arr, function, mean_resolution, k, executions))
     
     test_duration = get_time() - test_start_time
@@ -110,6 +110,20 @@ def plot_results(timings, color, function_name):
 
 
 '''
+    Return seconds in a human readable format
+'''
+def make_readable(seconds):
+    seconds = int(seconds * 1000) / 1000
+    hh = int(seconds / 3600)
+    seconds = seconds % 3600
+    mm = int(seconds / 60)
+    ss = int(seconds % 60)
+    milli = int((seconds - ss)*1000) % 1000
+
+    return f"{hh:02}h {mm:02}min {ss:02}sec {milli:03}msec"
+
+
+'''
     Test heap select algorithm on given array size
     k parameter iterates over the entire array
     so that each and every index is passed exactly once
@@ -118,42 +132,40 @@ def plot_results(timings, color, function_name):
     Plot results and show graph
 '''
 def run_dependency_test():
-    array_length = 1000     #int(input("Input test array size: "))     
+    array_length = 1000
     max_rand_val = 1000000
-    executions = 10
+    executions = 30
     arr = init_array(array_length, max_rand_val)
-
-    main_start = get_time()
 
     print("\nTesting Min-Max Heap Select algorithm:")
     min_max_timings, min_max_duration = test_function(heap.heap_select, arr, executions)
     plot_results(min_max_timings, 'lightgreen', 'Min-Max Heap')
-    print("\nDone\n\n")
+    print("\nDone\n")
 
     print("Testing Min-Heap Select algorithm:")
     min_timings, min_duration = test_function(heap.select_min_heap, arr, executions)
     plot_results(min_timings, 'orange', 'Min-Heap')
-    print("\nDone \n\n")
-
-    main_duration = get_time() - main_start
+    print("\nDone\n")
 
     total_execution_sum = min_max_duration + min_duration
 
     min_max_percentage = min_max_duration / total_execution_sum
     min_percentage = min_duration / total_execution_sum
 
+    plt.xlabel('K value', loc='center')
+    plt.ylabel('Execution time', loc='center')
     plt.xscale('linear')
     plt.yscale('linear')
     plt.legend(title="K-dependency analysis")
 
 
-    plt.annotate(f'MinMax Heap duration: {min_max_duration:.6f}s  {(min_max_percentage * 100):.2f}%\nMin Heap duration: {min_duration:.6f}s  {(min_percentage * 100):.2f}%\nTotal time: {main_duration:.6f}', \
+    plt.annotate(f'{"MinMax Heap duration:":25} {make_readable(min_max_duration)} -> {(min_max_percentage * 100):.2f}%\n{"Min Heap duration:":28} {make_readable(min_duration)} -> {(min_percentage * 100):.2f}%\n{"Total time:":35} {make_readable(total_execution_sum)}', \
                 xy=(0.0, -0.128), \
                 xycoords='axes fraction', \
                 ha='left', \
                 fontsize=7)
 
-    plt.annotate(f'Array length: {array_length}\nMax random value in array: {max_rand_val}\nExecutions for each k-value: {executions}', \
+    plt.annotate(f'Array length: {array_length:8}\nExecutions for each k-value: {executions:8}', \
                 xy=(1, -0.128), \
                 xycoords='axes fraction', \
                 ha='right', \

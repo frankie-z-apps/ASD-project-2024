@@ -157,7 +157,7 @@ def run_benchmark():
     n_end = 100000
     iterations = 100
     max_rand_val = 1000000
-    k_tests = 10
+    k_tests = 5
     samples = generate_samples(n_start, n_end, iterations, max_rand_val, k_tests)
 
     benchmark_start = get_time()

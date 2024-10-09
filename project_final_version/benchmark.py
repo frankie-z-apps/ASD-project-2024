@@ -96,17 +96,16 @@ def measure(arr, function, mean_resolution, k_values):
 def test_function(function, samples):
     mean_resolution = calculate_mean_resolution(1000)
     timings = [0] * len(samples)
-    i = 0
-
+    
     test_start_time = get_time()
 
-    for sample in samples:
+    for i in range(len(samples)):
+        sample = samples[i]
         arr = sample[0]
         k_values = sample[1]
         n = len(arr)
-        print(f"Array size: {n} \tProgress: {i+1}%", end='\r')
+        print(f"Array size: {n:6}\tProgress: {((i+1)/len(samples)*100):3.2f}%", end='\r')
         timings[i] = (n, measure(arr, function, mean_resolution, k_values))
-        i = i + 1
 
     test_duration = get_time() - test_start_time
     
@@ -120,7 +119,7 @@ def generate_samples(n_start, n_end, iterations, max_rand_val, k_tests):
     random.seed()
     samples = []
     A = n_start
-    B = (n_end / n_start) ** (1/99)
+    B = (n_end / n_start) ** (1/(iterations-1))
 
     for i in range(iterations):
         n = int(A * (B ** i))
@@ -146,7 +145,21 @@ def plot_results(timings, color, function_name):
     mean_slope = [(q * x) for x in xs]
 
     plt.scatter(xs, ys, c=color, label=function_name)
-    plt.plot(xs, mean_slope, '--', c=color, label=f'Mean execution time of {function_name}')
+    plt.plot(xs, mean_slope, '--', c=color)
+
+
+'''
+    Return seconds in a human readable format
+'''
+def make_readable(seconds):
+    seconds = int(seconds * 1000) / 1000
+    hh = int(seconds / 3600)
+    seconds = seconds % 3600
+    mm = int(seconds / 60)
+    ss = int(seconds % 60)
+    milli = int((seconds - ss)*1000) % 1000
+
+    return f"{hh:02}h {mm:02}min {ss:02}sec {milli:03}msec"
 
 
 '''
@@ -156,54 +169,51 @@ def plot_results(timings, color, function_name):
 '''
 def run_benchmark():
     n_start = 100
-    n_end = 10000   
+    n_end = 100000
     iterations = 100
     max_rand_val = 1000000
-    k_tests = 20
+    k_tests = 75
     samples = generate_samples(n_start, n_end, iterations, max_rand_val, k_tests)
-
-    benchmark_start = get_time()
+    
+    plt.xscale('log')
+    plt.yscale('log')
 
     print("\nTesting Quick Select algorithm:")
     quick_timings, quick_duration = test_function(quick.quick_select, samples)
     plot_results(quick_timings, 'lightblue', 'Quick Select')
-    print("\nDone\n\n")
-
-    print("Testing Heap Select algorithm")
-    heap_timings, heap_duration = test_function(heap.heap_select, samples)
-    plot_results(heap_timings, 'lightgreen', 'Heap Select')
-    print("\nDone\n\n")
+    print("\nDone\n")
 
     print("Testing Median of Medians Select algorithm")
     median_timings, median_duration = test_function(median.median_of_medians_select, samples)
     plot_results(median_timings, 'orange', 'Median of Medians Select')
-    print("\nDone\n\n")
-    
-    benchmark_duration = get_time() - benchmark_start
+    print("\nDone")
 
-    algorithm_sum = quick_duration + heap_duration + median_duration
+    print("Testing Heap Select algorithm")
+    heap_timings, heap_duration = test_function(heap.heap_select, samples)
+    plot_results(heap_timings, 'lightgreen', 'Heap Select')
+    print("\nDone\n")
 
-    quick_percentage = quick_duration / algorithm_sum
-    heap_percentage = heap_duration / algorithm_sum
-    median_percentage = median_duration / algorithm_sum
+    algorithm_total_time = quick_duration + median_duration + heap_duration
 
-    plt.xscale('log')
-    plt.yscale('log')
+    quick_percentage = quick_duration / algorithm_total_time
+    median_percentage = median_duration / algorithm_total_time
+    heap_percentage = heap_duration / algorithm_total_time
+
+    plt.xlabel('Array size', loc='center')
+    plt.ylabel('Execution time', loc='center')
     plt.legend(title="Algorithms comparison")
 
-    plt.annotate(f'Quick Sort duration: {quick_duration:.6f}s  {(quick_percentage * 100):.2f}%\nHeap Sort duration: {heap_duration:.6f}s  {(heap_percentage * 100):.2f}%\nMedian of Medians duration: {median_duration:.6f}s  {(median_percentage * 100):.2f}%\nTotal time: {benchmark_duration:.6f}s', \
+    plt.annotate(f'{"Quick Select:":35} {make_readable(quick_duration)} -> {(quick_percentage * 100):.2f}%\n{"Median of Medians Select:":26} {make_readable(median_duration)} -> {(median_percentage * 100):.2f}%\n{"Heap Select:":35} {make_readable(heap_duration)} -> {(heap_percentage * 100):.2f}%\n{"Total time:":36} {make_readable(algorithm_total_time)}', \
                 xy=(0.0, -0.128), \
                 xycoords='axes fraction', \
                 ha='left', \
                 fontsize=7)
     
-    plt.annotate(f'Iterations: {iterations}\nInitial array length: {n_start}\nFinal array length: {n_end}\nK tests: {k_tests}', \
+    plt.annotate(f'Iterations: {iterations:8}\nInitial array length: {n_start:8}\nFinal array length: {n_end:8}\nK tests: {k_tests:8}', \
                 xy=(1, -0.128), \
                 xycoords='axes fraction', \
                 ha='right', \
                 fontsize=7 )
-
-    print(f"QuickSort total duration: {quick_duration:.6f}s\nHeapSort total duration: {heap_duration:.6f}s\nMedian of Medians total duration: {median_duration:.6f}s\nTotal duration: {benchmark_duration:.6f}s")
     
     plt.show()
 
