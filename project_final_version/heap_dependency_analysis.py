@@ -132,9 +132,9 @@ def make_readable(seconds):
     Plot results and show graph
 '''
 def run_dependency_test():
-    array_length = 100
+    array_length = 10000
     max_rand_val = 1000000
-    executions = 30
+    executions = 15
     arr = init_array(array_length, max_rand_val)
 
     print("\nTesting Min-Max Heap Select algorithm:")
