@@ -144,7 +144,21 @@ def plot_results(timings, color, function_name):
     mean_slope = [(q * x) for x in xs]
 
     plt.scatter(xs, ys, c=color, label=function_name)
-    plt.plot(xs, mean_slope, '--', c=color, label=f'Mean execution time of {function_name}')
+    plt.plot(xs, mean_slope, '--', c=color)
+
+
+'''
+    Return seconds in a human readable format
+'''
+def make_readable(seconds):
+    seconds = int(seconds * 1000) / 1000
+    hh = int(seconds / 3600)
+    seconds = seconds % 3600
+    mm = int(seconds / 60)
+    ss = int(seconds % 60)
+    milli = int((seconds - ss)*1000) % 1000
+
+    return f"{hh:02}h {mm:02}min {ss:02}sec {milli:03}msec"
 
 
 '''
@@ -154,13 +168,11 @@ def plot_results(timings, color, function_name):
 '''
 def run_benchmark():
     n_start = 100
-    n_end = 100000
+    n_end = 10000
     iterations = 100
     max_rand_val = 1000000
     k_tests = 5
     samples = generate_samples(n_start, n_end, iterations, max_rand_val, k_tests)
-
-    benchmark_start = get_time()
 
     print("\nTesting Quick Select - fixed pivot:")
     fixed_timings, fixed_duration = test_function(quick.quick_select_fixed, samples)
@@ -171,25 +183,26 @@ def run_benchmark():
     randomized_timings, randomized_duration = test_function(quick.quick_select, samples)
     plot_results(randomized_timings, 'orange', 'Quick Select - random pivot')
     print("\nDone\n\n")
-    
-    benchmark_duration = get_time() - benchmark_start
 
-    algorithm_sum = fixed_duration + randomized_duration
-
-    fixed_percentage = fixed_duration / algorithm_sum
-    randomized_percentage = randomized_duration / algorithm_sum
-
+    plt.title('Fixed vs Random pivot comparison')
+    plt.xlabel('Array size', loc='center')
+    plt.ylabel('Execution time', loc='center')
+    plt.legend()
     plt.xscale('log')
     plt.yscale('log')
-    plt.legend(title="Fixed vs Random pivot comparison")
 
-    plt.annotate(f'Fixed pivot duration: {fixed_duration:.6f}s  {(fixed_percentage * 100):.2f}%\nRandom pivot duration: {randomized_duration:.6f}s  {(randomized_percentage * 100):.2f}%\nTotal time: {benchmark_duration:.6f}s', \
+    algorithm_total_time = fixed_duration + randomized_duration
+
+    fixed_percentage = fixed_duration / algorithm_total_time
+    randomized_percentage = randomized_duration / algorithm_total_time
+
+    plt.annotate(f'{"Fixed pivot duration:":31} {make_readable(fixed_duration)} -> {(fixed_percentage * 100):.2f}%\n{"Random pivot duration:":28} {make_readable(randomized_duration)} -> {(randomized_percentage * 100):.2f}%\n{"Total time:":38} {make_readable(algorithm_total_time)}', \
                 xy=(0.0, -0.128), \
                 xycoords='axes fraction', \
                 ha='left', \
                 fontsize=7)
     
-    plt.annotate(f'Iterations: {iterations}\nInitial array length: {n_start}\nFinal array length: {n_end}\nK tests: {k_tests}', \
+    plt.annotate(f'Iterations: {iterations:8}\nInitial array length: {n_start:8}\nFinal array length: {n_end:8}\nK tests: {k_tests:8}', \
                 xy=(1, -0.128), \
                 xycoords='axes fraction', \
                 ha='right', \

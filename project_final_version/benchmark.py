@@ -169,15 +169,12 @@ def make_readable(seconds):
 '''
 def run_benchmark():
     n_start = 100
-    n_end = 100000
+    n_end = 1000
     iterations = 100
     max_rand_val = 1000000
     k_tests = 75
     samples = generate_samples(n_start, n_end, iterations, max_rand_val, k_tests)
     
-    plt.xscale('log')
-    plt.yscale('log')
-
     print("\nTesting Quick Select algorithm:")
     quick_timings, quick_duration = test_function(quick.quick_select, samples)
     plot_results(quick_timings, 'lightblue', 'Quick Select')
@@ -193,15 +190,18 @@ def run_benchmark():
     plot_results(heap_timings, 'lightgreen', 'Heap Select')
     print("\nDone\n")
 
+    plt.title('Algorithms comparison')
+    plt.xlabel('Array size', loc='center')
+    plt.ylabel('Execution time', loc='center')
+    plt.legend()
+    plt.xscale('log')
+    plt.yscale('log')
+
     algorithm_total_time = quick_duration + median_duration + heap_duration
 
     quick_percentage = quick_duration / algorithm_total_time
     median_percentage = median_duration / algorithm_total_time
     heap_percentage = heap_duration / algorithm_total_time
-
-    plt.xlabel('Array size', loc='center')
-    plt.ylabel('Execution time', loc='center')
-    plt.legend(title="Algorithms comparison")
 
     plt.annotate(f'{"Quick Select:":35} {make_readable(quick_duration)} -> {(quick_percentage * 100):.2f}%\n{"Median of Medians Select:":26} {make_readable(median_duration)} -> {(median_percentage * 100):.2f}%\n{"Heap Select:":35} {make_readable(heap_duration)} -> {(heap_percentage * 100):.2f}%\n{"Total time:":36} {make_readable(algorithm_total_time)}', \
                 xy=(0.0, -0.128), \

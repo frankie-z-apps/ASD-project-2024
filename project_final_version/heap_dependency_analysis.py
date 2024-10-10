@@ -132,7 +132,7 @@ def make_readable(seconds):
     Plot results and show graph
 '''
 def run_dependency_test():
-    array_length = 1000
+    array_length = 100
     max_rand_val = 1000000
     executions = 30
     arr = init_array(array_length, max_rand_val)
@@ -152,12 +152,12 @@ def run_dependency_test():
     min_max_percentage = min_max_duration / total_execution_sum
     min_percentage = min_duration / total_execution_sum
 
+    plt.title('K parameter dependency analysis')
     plt.xlabel('K value', loc='center')
     plt.ylabel('Execution time', loc='center')
     plt.xscale('linear')
     plt.yscale('linear')
-    plt.legend(title="K-dependency analysis")
-
+    plt.legend()
 
     plt.annotate(f'{"MinMax Heap duration:":25} {make_readable(min_max_duration)} -> {(min_max_percentage * 100):.2f}%\n{"Min Heap duration:":28} {make_readable(min_duration)} -> {(min_percentage * 100):.2f}%\n{"Total time:":35} {make_readable(total_execution_sum)}', \
                 xy=(0.0, -0.128), \
