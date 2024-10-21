@@ -132,9 +132,9 @@ def make_readable(seconds):
     Plot results and show graph
 '''
 def run_dependency_test():
-    array_length = 10000
+    array_length = 1000
     max_rand_val = 1000000
-    executions = 15
+    executions = 10
     arr = init_array(array_length, max_rand_val)
 
     print("\nTesting Min-Max Heap Select algorithm:")
@@ -152,24 +152,12 @@ def run_dependency_test():
     min_max_percentage = min_max_duration / total_execution_sum
     min_percentage = min_duration / total_execution_sum
 
-    plt.title('K parameter dependency analysis')
-    plt.xlabel('K value', loc='center')
-    plt.ylabel('Execution time', loc='center')
     plt.xscale('linear')
     plt.yscale('linear')
-    plt.legend()
+    plt.legend(fontsize=16)
 
-    plt.annotate(f'{"MinMax Heap duration:":25} {make_readable(min_max_duration)} -> {(min_max_percentage * 100):.2f}%\n{"Min Heap duration:":28} {make_readable(min_duration)} -> {(min_percentage * 100):.2f}%\n{"Total time:":35} {make_readable(total_execution_sum)}', \
-                xy=(0.0, -0.128), \
-                xycoords='axes fraction', \
-                ha='left', \
-                fontsize=7)
-
-    plt.annotate(f'Array length: {array_length:8}\nExecutions for each k-value: {executions:8}', \
-                xy=(1, -0.128), \
-                xycoords='axes fraction', \
-                ha='right', \
-                fontsize=7)
+    print(f'{"MinMax Heap duration:":30} {make_readable(min_max_duration)} -> {(min_max_percentage * 100):.2f}%\n{"Min Heap duration:":30} {make_readable(min_duration)} -> {(min_percentage * 100):.2f}%\n{"Total time:":30} {make_readable(total_execution_sum)}')
+    print(f'\n{f"Array length: {array_length}":8}\n{f"Executions for each k-value: {executions}":8}')
 
     plt.show()
 

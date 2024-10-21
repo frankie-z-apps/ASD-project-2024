@@ -172,7 +172,7 @@ def run_benchmark():
     n_end = 100000
     iterations = 100
     max_rand_val = 1000000
-    k_tests = 100
+    k_tests = 25
     samples = generate_samples(n_start, n_end, iterations, max_rand_val, k_tests)
     
     print("\nTesting Quick Select algorithm:")
@@ -183,17 +183,14 @@ def run_benchmark():
     print("Testing Median of Medians Select algorithm")
     median_timings, median_duration = test_function(median.median_of_medians_select, samples)
     plot_results(median_timings, 'orange', 'Median of Medians Select')
-    print("\nDone")
+    print("\nDone\n")
 
     print("Testing Heap Select algorithm")
     heap_timings, heap_duration = test_function(heap.heap_select, samples)
     plot_results(heap_timings, 'lightgreen', 'Heap Select')
     print("\nDone\n")
 
-    plt.title('Algorithms comparison')
-    plt.xlabel('Array size', loc='center')
-    plt.ylabel('Execution time', loc='center')
-    plt.legend()
+    plt.legend(fontsize=16)
     plt.xscale('log')
     plt.yscale('log')
 
@@ -203,17 +200,8 @@ def run_benchmark():
     median_percentage = median_duration / algorithm_total_time
     heap_percentage = heap_duration / algorithm_total_time
 
-    plt.annotate(f'{"Quick Select:":35} {make_readable(quick_duration)} -> {(quick_percentage * 100):.2f}%\n{"Median of Medians Select:":26} {make_readable(median_duration)} -> {(median_percentage * 100):.2f}%\n{"Heap Select:":35} {make_readable(heap_duration)} -> {(heap_percentage * 100):.2f}%\n{"Total time:":36} {make_readable(algorithm_total_time)}', \
-                xy=(0.0, -0.128), \
-                xycoords='axes fraction', \
-                ha='left', \
-                fontsize=7)
-    
-    plt.annotate(f'Iterations: {iterations:8}\nInitial array length: {n_start:8}\nFinal array length: {n_end:8}\nK tests: {k_tests:8}', \
-                xy=(1, -0.128), \
-                xycoords='axes fraction', \
-                ha='right', \
-                fontsize=7 )
+    print(f'{"Quick Select:":30} {make_readable(quick_duration)} -> {(quick_percentage * 100):.2f}%\n{"Median of Medians Select:":30} {make_readable(median_duration)} -> {(median_percentage * 100):.2f}%\n{"Heap Select:":30} {make_readable(heap_duration)} -> {(heap_percentage * 100):.2f}%\n{"Total time:":30} {make_readable(algorithm_total_time)}')
+    print(f'\n{f"Iterations: {iterations}":8}\n{f"Initial array length: {n_start}":8}\n{f"Final array length: {n_end}":8}\n{f"K tests: {k_tests}":8}')
     
     plt.show()
 
